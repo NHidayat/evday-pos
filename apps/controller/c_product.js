@@ -1,4 +1,4 @@
-const {getAllProduct, getProductById, postProduct, patchProduct, deleteProduct} = require('../model/m_product')
+const {getAllProduct, getProductById, postProduct, patchProduct, deleteProduct, getProductByName} = require('../model/m_product')
 const helper = require('../helper/my_helper')
 
 module.exports = {
@@ -19,6 +19,19 @@ module.exports = {
                 return helper.response(response, 200, "Success Get Product", result)
             } else {
                 return helper.response(response, 404, `Product By Id ${id} not Found`, result)
+            }
+        } catch(error) {
+            return helper.response(response, 400, "Bad Request", error)
+        }
+    },
+    getProductByName: async (request, response) => {
+        try {
+            const {product_name} = request.params
+            const result = await getProductByName(product_name)
+            if (result.length > 0) {
+                return helper.response(response, 200, "Success Get Product by Name", result)
+            } else {
+                return helper.response(response, 404, `Product by name ${product_name} not found!`, result)
             }
         } catch(error) {
             return helper.response(response, 400, "Bad Request", error)
