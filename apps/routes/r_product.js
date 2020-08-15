@@ -2,7 +2,7 @@ const router = require('express').Router()
 const {getAllProduct, getProductById, getProductByName,  postProduct, patchProduct, deleteProduct} = require('../controller/c_product')
 
 // GET
-// router.get('/', getAllProduct)
+router.get('/', getAllProduct)
 
 // GET BY ID
 router.get('/:id', getProductById)
