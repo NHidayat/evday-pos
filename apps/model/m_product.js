@@ -1,9 +1,9 @@
 const connection = require('../config/mysql')
 
 module.exports = {
-	getProduct: (limit, offset) => {
+	getProduct: (order, sort, limit, offset) => {
 		return new Promise((resolve,reject) => {
-			connection.query('SELECT * FROM product LIMIT ? OFFSET ?', [limit, offset], (error, result) => {
+			connection.query(`SELECT * FROM product p INNER JOIN category c ON p.category_id = c.category_id ORDER BY ${order} ${sort} LIMIT ${limit} OFFSET ${offset}`, (error, result) => {
 				!error ? resolve(result) : reject(new Eror(error))
 			})
 		})
