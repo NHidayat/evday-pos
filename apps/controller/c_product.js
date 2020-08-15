@@ -1,11 +1,49 @@
-const {getAllProduct, getProductById, postProduct, patchProduct, deleteProduct, getProductByName} = require('../model/m_product')
+const {getProduct, getProductCount, getProductById, postProduct, patchProduct, deleteProduct, getProductByName} = require('../model/m_product')
 const helper = require('../helper/my_helper')
+const qs = require('querystring')
+
+const getPrevLink = (page, currentQuery) => {
+    if (page > 1) {
+        const generatePage = { page: page - 1 }
+        const resultNextLink = {...currentQuery, ...generatePage}
+        return qs.stringify(resultNextLink)
+    } else {
+        return null
+    }
+}
+
+const getNextLink = (page, totalPage, currentQuery) => {
+    if (page < totalPage) {
+        const generatePage = { page: page + 1 }
+        const resultPrevLink = {...currentQuery, ...generatePage}
+        return qs.stringify(resultPrevLink)
+    } else {
+        return null
+    }
+}
 
 module.exports = {
     getAllProduct: async (request, response) => {
+        let { page, limit } = request.query
+        page = typeof page !== 'number' ? 1 : parseInt(page)
+        limit = limit == undefined ? 9 : parseInt(limit)
+        
+        const totalData = await getProductCount()
+        const totalPage = Math.ceil(totalData / limit)
+        let offset = page * limit - limit
+        
+        let prevLink = getPrevLink(page, request.query)
+        let nextLink = getNextLink(page, totalPage, request.query)
+        
+        const pageInfo = {
+            page, totalPage, limit, totalData,
+            prevLink: prevLink && `http://127.0.0.1:3000/product?${prevLink}`,
+            nextLink: nextLink && `http://127.0.0.1:3000/product?${nextLink}`
+        }
+
         try {
-            const result = await getAllProduct()
-            return helper.response(response, 200, "Success Get Product", result)
+            const result = await getProduct(limit, offset)
+            return helper.response(response, 200, "Success Get Product", result, pageInfo)
         } catch(error) {
             return helper.response(response, 400, "Bad Request", error)
         }
@@ -14,7 +52,7 @@ module.exports = {
         try {
             const { id } = request.params
             const result = await getProductById(id)
-            
+
             if (result.length > 0) {
                 return helper.response(response, 200, "Success Get Product", result)
             } else {
