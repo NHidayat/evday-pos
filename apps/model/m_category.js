@@ -4,14 +4,14 @@ module.exports = {
 	getAllCategory: () => {
 		return new Promise((resolve,reject) => {
 			connection.query('SELECT * FROM category', (error, result) => {
-				!error ? resolve(result) : reject(new Eror(error))
+				!error ? resolve(result) : reject(new Error(error))
 			})
 		})
 	},
 	getCategoryById: (id) => {
 		return new Promise((resolve,reject) => {
 			connection.query('SELECT * FROM Category WHERE category_id = ?', id, (error, result) => {
-				!error ? resolve(result) : reject(new Eror(error))
+				!error ? resolve(result) : reject(new Error(error))
 			})
 		})
 	},
@@ -25,7 +25,7 @@ module.exports = {
 					}
 					resolve(newResult)
 				} else {
-					reject(new Eror(error))
+					reject(new Error(error))
 				}
 			})
 		})
