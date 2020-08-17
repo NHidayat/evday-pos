@@ -15,16 +15,24 @@ module.exports = {
 			})
 		})
 	},
-	getHistoryById: (id, cartItem) => {
+	getHistoryById: (id, itemsData) => {
 		return new Promise((resolve,reject) => {
 			connection.query('SELECT * FROM history WHERE history_id = ?', id, (error, result) => {
 				if (!error) {
 					if (result.length > 0) {
-						result[0].items = cartItem
+						const { history_id, history_invoice, history_created_at, history_ppn, history_total } = result[0]
+						newResult = [{
+							history_id,
+							history_invoice,
+							history_created_at,
+							items: itemsData,
+							history_ppn,
+							history_total
+						}]
 					} else {
-						result = result
+						newResult = result
 					}
-					return resolve(result)
+					return resolve(newResult)
 				} else {
 					return reject(new new Error(error))
 				}
