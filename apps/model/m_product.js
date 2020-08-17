@@ -18,7 +18,7 @@ module.exports = {
 	getProductById: (id) => {
 		return new Promise((resolve,reject) => {
 			connection.query('SELECT * FROM product WHERE product_id = ?', id, (error, result) => {
-				!error ? console.log(result) : reject(new Error(error))
+				!error ? resolve(result) : reject(new Error(error))
 			})
 		})
 	},
