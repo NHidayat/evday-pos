@@ -1,5 +1,6 @@
 const router = require('express').Router()
-const { getAllHistory, getHistoryById } = require('../controller/c_History')
+const { getAllHistory, getHistoryById, postHistory } = require('../controller/c_history')
+const { postHistory_v2} = require('../controller/c_history_v2')
 
 // GET
 router.get('/', getAllHistory)
@@ -7,13 +8,10 @@ router.get('/', getAllHistory)
 // GET BY ID
 router.get('/:id', getHistoryById)
 
-// // POST
-// router.post('/', postHistory)
+// POST
+router.post('/', postHistory)
 
-// // PATCH/PUT
-// router.patch('/:id', patchHistory)
-
-// // DELETE
-// router.delete('/:id', deleteHistory)
+// POST V2
+router.post('/v2', postHistory_v2)
 
 module.exports = router
