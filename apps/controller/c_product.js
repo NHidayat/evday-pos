@@ -66,7 +66,7 @@ module.exports = {
     },
     getProductByName: async (request, response) => {
         try {
-            const {product_name} = request.params
+            const { product_name } = request.params
             const result = await getProductByName(product_name)
             if (result.length > 0) {
                 return helper.response(response, 200, "Success Get Product by Name", result)
@@ -79,7 +79,7 @@ module.exports = {
     },
     postProduct: async (request, response) => {
         try {
-            const {product_name, product_image, product_price, category_id, product_status} = request.body
+            const { product_name, product_image, product_price, category_id, product_status } = request.body
             const setData = {
                 product_name,
                 product_image,

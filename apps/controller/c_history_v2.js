@@ -1,4 +1,4 @@
-const { getAllHistory, getHistoryById, getItemByHistory, postHistory, postOrder } = require('../model/m_history_v2')
+const { getAllHistory, getHistoryById, getItemByHistory, postHistory } = require('../model/m_history_v2')
 const helper = require('../helper/my_helper')
 
 module.exports = {

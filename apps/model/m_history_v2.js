@@ -1,13 +1,6 @@
 const connection = require('../config/mysql')
 
 module.exports = {
-	getItemByHistory: (id) => {
-		return new Promise((resolve, reject) => {
-			connection.query('SELECT * FROM order_item WHERE history_id = ?', id, (error, result) => {
-				!error ? resolve(result) : reject(new Error(error))
-			})
-		})
-	},
 	getAllHistory: () => {
 		return new Promise((resolve,reject) => {
 			connection.query('SELECT * FROM history', (error, result) => {

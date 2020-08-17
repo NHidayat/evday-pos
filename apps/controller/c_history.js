@@ -1,4 +1,4 @@
-const { getAllHistory, getHistoryById, getItemByHistory, postHistory, postOrder } = require('../model/m_history')
+const { getAllHistory, getHistoryById, getItemByHistory, postHistory } = require('../model/m_history')
 const { postOrderItem } = require('../model/m_order')
 const helper = require('../helper/my_helper')
 
@@ -39,7 +39,7 @@ module.exports = {
                 history_total,
                 history_created_at: new Date()
             }
-            const insertHistory = await postHistory(invoiceData, itemsData)
+            const insertHistory = await postHistory(invoiceData)
             const result = await postOrderItem(insertHistory,itemsData)
             return helper.response(response, 200, "Success Post History", result)
         } catch(error) {
