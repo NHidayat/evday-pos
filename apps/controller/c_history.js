@@ -44,12 +44,16 @@ module.exports = {
         }
     },
     postHistory: async (request, response) => {
+        const itemsData = request.body.items
+        if (itemsData == undefined || itemsData == '') {
+            return helper.response(response, 400, "Cart is empty", null)
+        }
+        // itemsData == undefined || itemsData == '' ? helper.response(response, 400, "Cart is Empty", null) : null
+        const history_invoice = new Date().getTime()
+        const itemsTotal = itemsData.map(item => item.subtotal).reduce((a, b) => a + b)
+        const history_ppn = (0.1 * itemsTotal)
+        const history_total = itemsTotal + history_ppn
         try {
-            const itemsData = request.body.items
-            const history_invoice = new Date().getTime()
-            const itemsTotal = itemsData.map(item => item.subtotal).reduce((a, b) => a + b)
-            const history_ppn = (0.1 * itemsTotal)
-            const history_total = itemsTotal + history_ppn
             const invoiceData = {
                 history_invoice,
                 history_ppn,

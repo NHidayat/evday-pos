@@ -31,8 +31,8 @@ module.exports = {
         }
     },
     getProductById: async (request, response) => {
+        const { id } = request.params
         try {
-            const { id } = request.params
             const result = await getProductById(id)
 
             if (result.length > 0) {
@@ -45,9 +45,9 @@ module.exports = {
         }
     },
     getProductByName: async (request, response) => {
+        const { product_name } = request.params
+        const result = await getProductByName(product_name)
         try {
-            const { product_name } = request.params
-            const result = await getProductByName(product_name)
             if (result.length > 0) {
                 return helper.response(response, 200, "Success Get Product by Name", result)
             } else {
@@ -58,8 +58,12 @@ module.exports = {
         }
     },
     postProduct: async (request, response) => {
+        const { product_name, product_image, product_price, category_id, product_status } = request.body
+
+        if (product_name == undefined || product_name == '' || product_image == undefined || product_image == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '' ) {
+            return helper.response(response, 400, "Form ata must be complete, dude", null)
+        }
         try {
-            const { product_name, product_image, product_price, category_id, product_status } = request.body
             const setData = {
                 product_name,
                 product_image,
@@ -69,7 +73,6 @@ module.exports = {
                 product_status
             }
             const result = await postProduct(setData)
-            console.log(result)
             return helper.response(response, 201, "Product Created", result)
         } catch (e) {
             return helper.response(response, 400, "Bad Request", e)
@@ -77,32 +80,35 @@ module.exports = {
 
     },
     patchProduct: async (request, response) => {
+        const { id } = request.params
+        const { product_name, product_image, product_price, category_id, product_status } = request.body
+
+        if (product_name == undefined || product_name == '' || product_image == undefined || product_image == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '' ) {
+            return helper.response(response, 400, "Form ata must be complete, dude", null)
+        } 
         try {
-            const { id } = request.params
-            const { product_name, product_image, product_price, category_id, product_status } = request.body
-            const setData = {
-                product_name,
-                product_image,
-                product_price,
-                category_id,
-                product_updated_at: new Date(),
-                product_status
-            }
             const cekId = await getProductById(id)
             if (cekId.length > 0) {
+                const setData = {
+                    product_name,
+                    product_image,
+                    product_price,
+                    category_id,
+                    product_updated_at: new Date(),
+                    product_status
+                }
                 const result = await patchProduct(setData, id)
                 return helper.response(response, 201, "Product Updated", result)
             } else {
                 return helper.response(response, 404, `Product By Id ${id} not Found`)
             }
-
         } catch (e) {
-            return helper.response(response, 400, "Bad Request", error)
+            return helper.response(response, 400, "Bad Request", e)
         }
     },
     deleteProduct: async (request, response) => {
+        const { id } = request.params
         try {
-            const { id } = request.params
             const cekId = await getProductById(id)
             if (cekId.length > 0) {
                 const result = await deleteProduct(id)
@@ -111,8 +117,7 @@ module.exports = {
                 return helper.response(response, 404, `Product By Id ${id} not Found`)
             }
         } catch (e) {
-            return helper.response(response, 400, "Bad Request", error)
+            return helper.response(response, 400, "Bad Request", e)
         }
-
     }
 }

@@ -25,13 +25,16 @@ module.exports = {
         }
     },
     postCategory: async (request, response) => {
+        const { category_name, category_status } = request.body
+        const setData = {
+            category_name,
+            category_created_at: new Date(),
+            category_status
+        }
+        if (category_name == undefined || category_name == '' || category_status == undefined || category_status == '') {
+            return helper.response(response, 400, "Form data must be complete, dude ", null)
+        }
         try {
-            const { category_name, category_status } = request.body
-            const setData = {
-                category_name,
-                category_created_at: new Date(),
-                category_status
-            }
             const result = await postCategory(setData)
             return helper.response(response, 201, "category Created", result)
         } catch (e) {
@@ -40,9 +43,12 @@ module.exports = {
 
     },
     patchCategory: async (request, response) => {
+        const { id } = request.params
+        const { category_name, category_status } = request.body
+        if (category_name == undefined || category_name == '' || category_status == undefined || category_status == '') {
+            return helper.response(response, 400, "Form data must be complete, dude ", null)
+        }
         try {
-            const { id } = request.params
-            const { category_name, category_status } = request.body
             const setData = {
                 category_name,
                 category_updated_at: new Date(),
@@ -51,7 +57,7 @@ module.exports = {
             const cekId = await getCategoryById(id)
             if (cekId.length > 0) {
                 const result = await patchCategory(setData, id)
-                return helper.response(response, 201, "category Updated", result)
+                return helper.response(response, 201, "category updated", result)
             } else {
                 return helper.response(response, 404, `category by ID ${id} not found`)
             }
