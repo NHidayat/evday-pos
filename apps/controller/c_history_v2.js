@@ -15,9 +15,9 @@ module.exports = {
 				history_total,
 				history_created_at: new Date()
 			}
-			const result = await postHistory(invoiceData, itemsData)            
+			const result = await postHistory(invoiceData, itemsData)
 			return helper.response(response, 200, "Success Post History", result)
-		} catch(error) {
+		} catch (error) {
 			return helper.response(response, 400, "Bad Request", error)
 		}
 	}

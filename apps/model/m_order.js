@@ -1,7 +1,7 @@
 const connection = require('../config/mysql')
 
 module.exports = {
-	postOrderItem : (historyData, itemsData) => {
+	postOrderItem: (historyData, itemsData) => {
 		return new Promise((resolve, reject) => {
 
 			const setData = itemsData.map(v => {
@@ -29,7 +29,7 @@ module.exports = {
 						reject(new Error(error))
 					}
 				})
-				
+
 			})
 		})
 	}

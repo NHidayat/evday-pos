@@ -7,7 +7,7 @@ module.exports = {
         try {
             const result = await getAllHistory()
             return helper.response(response, 200, "Success Get Histories", result)
-        } catch(error) {
+        } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
@@ -22,7 +22,7 @@ module.exports = {
             } else {
                 return helper.response(response, 404, `History by ID ${id} not found`, result)
             }
-        } catch(error) {
+        } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
@@ -40,10 +40,10 @@ module.exports = {
                 history_created_at: new Date()
             }
             const insertHistory = await postHistory(invoiceData)
-            const result = await postOrderItem(insertHistory,itemsData)
+            const result = await postOrderItem(insertHistory, itemsData)
             return helper.response(response, 200, "Success Post History", result)
-        } catch(error) {
-         return helper.response(response, 400, "Bad Request", error)
-     }
- }
+        } catch (error) {
+            return helper.response(response, 400, "Bad Request", error)
+        }
+    }
 }

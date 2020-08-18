@@ -1,4 +1,4 @@
-const { getAllCategory, getCategoryById, postCategory, patchCategory, deletecategory } = require('../model/m_category')
+const { getAllCategory, getCategoryById, postCategory, patchCategory, deleteCategory } = require('../model/m_category')
 const helper = require('../helper/my_helper')
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
         try {
             const result = await getAllCategory()
             return helper.response(response, 200, "Success Get category", result)
-        } catch(error) {
+        } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
@@ -20,13 +20,13 @@ module.exports = {
             } else {
                 return helper.response(response, 404, `category by ID ${id} not found`, result)
             }
-        } catch(error) {
+        } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
     postCategory: async (request, response) => {
         try {
-            const {category_name, category_status} = request.body
+            const { category_name, category_status } = request.body
             const setData = {
                 category_name,
                 category_created_at: new Date(),
@@ -34,7 +34,7 @@ module.exports = {
             }
             const result = await postCategory(setData)
             return helper.response(response, 201, "category Created", result)
-        } catch(e) {
+        } catch (e) {
             return helper.response(response, 400, "Bad Request", e)
         }
 
@@ -56,25 +56,25 @@ module.exports = {
                 return helper.response(response, 404, `category by ID ${id} not found`)
             }
 
-        } catch(e) {
+        } catch (e) {
             console.log(id)
             return helper.response(response, 400, "Bad Request", error)
         }
     },
-    deletecategory: async (request, response) => {
+    deleteCategory: async (request, response) => {
         try {
             const { id } = request.params
             const cekId = getCategoryById(id)
 
             if (cekId.length > 0) {
-                const result = await deletecategory(id)
+                const result = await deleteCategory(id)
                 return helper.response(response, 201, "category Deleted", result)
             } else {
                 return helper.response(response, 404, `category by ID ${id} not found`)
-           }
-       } catch(e) {
-           return helper.response(response, 400, "Bad Request", error)
-       }
+            }
+        } catch (e) {
+            return helper.response(response, 400, "Bad Request", error)
+        }
 
-   }
+    }
 }

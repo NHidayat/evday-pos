@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {getAllProduct, getProductById, getProductByName,  postProduct, patchProduct, deleteProduct} = require('../controller/c_product')
+const { getAllProduct, getProductById, getProductByName, postProduct, patchProduct, deleteProduct } = require('../controller/c_product')
 
 // GET
 router.get('/', getAllProduct)

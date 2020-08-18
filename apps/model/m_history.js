@@ -2,14 +2,14 @@ const connection = require('../config/mysql')
 
 module.exports = {
 	getAllHistory: () => {
-		return new Promise((resolve,reject) => {
+		return new Promise((resolve, reject) => {
 			connection.query('SELECT * FROM history', (error, result) => {
 				!error ? resolve(result) : reject(new Error(error))
 			})
 		})
 	},
 	getHistoryById: (id, itemsData) => {
-		return new Promise((resolve,reject) => {
+		return new Promise((resolve, reject) => {
 			connection.query('SELECT * FROM history WHERE history_id = ?', id, (error, result) => {
 				if (!error) {
 					if (result.length > 0) {

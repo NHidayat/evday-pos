@@ -1,11 +1,11 @@
-const {getProduct, getProductCount, getProductById, postProduct, patchProduct, deleteProduct, getProductByName} = require('../model/m_product')
+const { getProduct, getProductCount, getProductById, postProduct, patchProduct, deleteProduct, getProductByName } = require('../model/m_product')
 const helper = require('../helper/my_helper')
 const qs = require('querystring')
 
 const getPrevLink = (page, currentQuery) => {
     if (page > 1) {
         const generatePage = { page: page - 1 }
-        const resultNextLink = {...currentQuery, ...generatePage}
+        const resultNextLink = { ...currentQuery, ...generatePage }
         return qs.stringify(resultNextLink)
     } else {
         return null
@@ -15,7 +15,7 @@ const getPrevLink = (page, currentQuery) => {
 const getNextLink = (page, totalPage, currentQuery) => {
     if (page < totalPage) {
         const generatePage = { page: page + 1 }
-        const resultPrevLink = {...currentQuery, ...generatePage}
+        const resultPrevLink = { ...currentQuery, ...generatePage }
         return qs.stringify(resultPrevLink)
     } else {
         return null
@@ -33,10 +33,10 @@ module.exports = {
         const totalData = await getProductCount()
         const totalPage = Math.ceil(totalData / limit)
         let offset = page * limit - limit
-               
+
         let prevLink = getPrevLink(page, request.query)
         let nextLink = getNextLink(page, totalPage, request.query)
-        
+
         const pageInfo = {
             page, totalPage, limit, totalData, orderBy, sort,
             prevLink: prevLink && `http://127.0.0.1:3000/product?${prevLink}`,
@@ -46,7 +46,7 @@ module.exports = {
         try {
             const result = await getProduct(orderBy, sort, limit, offset)
             return helper.response(response, 200, "Success Get Product", result, pageInfo)
-        } catch(error) {
+        } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
@@ -60,7 +60,7 @@ module.exports = {
             } else {
                 return helper.response(response, 404, `Product By Id ${id} not Found`, result)
             }
-        } catch(error) {
+        } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
@@ -73,7 +73,7 @@ module.exports = {
             } else {
                 return helper.response(response, 404, `Product by name ${product_name} not found!`, result)
             }
-        } catch(error) {
+        } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
@@ -91,7 +91,7 @@ module.exports = {
             const result = await postProduct(setData)
             console.log(result)
             return helper.response(response, 201, "Product Created", result)
-        } catch(e) {
+        } catch (e) {
             return helper.response(response, 400, "Bad Request", e)
         }
 
@@ -116,7 +116,7 @@ module.exports = {
                 return helper.response(response, 404, `Product By Id ${id} not Found`)
             }
 
-        } catch(e) {
+        } catch (e) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
@@ -130,7 +130,7 @@ module.exports = {
             } else {
                 return helper.response(response, 404, `Product By Id ${id} not Found`)
             }
-        } catch(e) {
+        } catch (e) {
             return helper.response(response, 400, "Bad Request", error)
         }
 

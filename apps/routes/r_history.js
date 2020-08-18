@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { getAllHistory, getHistoryById, postHistory } = require('../controller/c_history')
-const { postHistory_v2} = require('../controller/c_history_v2')
+const { postHistory_v2 } = require('../controller/c_history_v2')
 
 // GET
 router.get('/', getAllHistory)
