@@ -2,26 +2,6 @@ const { getProduct, getProductCount, getProductById, postProduct, patchProduct, 
 const helper = require('../helper/my_helper')
 const qs = require('querystring')
 
-const getPrevLink = (page, currentQuery) => {
-    if (page > 1) {
-        const generatePage = { page: page - 1 }
-        const resultNextLink = { ...currentQuery, ...generatePage }
-        return qs.stringify(resultNextLink)
-    } else {
-        return null
-    }
-}
-
-const getNextLink = (page, totalPage, currentQuery) => {
-    if (page < totalPage) {
-        const generatePage = { page: page + 1 }
-        const resultPrevLink = { ...currentQuery, ...generatePage }
-        return qs.stringify(resultPrevLink)
-    } else {
-        return null
-    }
-}
-
 module.exports = {
     getAllProduct: async (request, response) => {
         let { page, limit, orderBy, sort } = request.query
@@ -34,8 +14,8 @@ module.exports = {
         const totalPage = Math.ceil(totalData / limit)
         let offset = page * limit - limit
 
-        let prevLink = getPrevLink(page, request.query)
-        let nextLink = getNextLink(page, totalPage, request.query)
+        let prevLink = helper.getPrevLink(page, request.query)
+        let nextLink = helper.getNextLink(page, totalPage, request.query)
 
         const pageInfo = {
             page, totalPage, limit, totalData, orderBy, sort,
