@@ -1,4 +1,4 @@
-<h1 align="center">ExpressJS - #Evday-POS RESTfull API</h1>
+<h1 align="center">ExpressJS - Evday-POS RESTfull API</h1>
 
 #background_projek. [More about Express](https://en.wikipedia.org/wiki/Express.js)
 
