@@ -1,12 +1,29 @@
-const { getAllHistory, getHistoryById, getItemByHistory, postHistory } = require('../model/m_history')
+const { getAllHistory, getHistoryById, getItemByHistory, postHistory, getHistoryCount, getHistory } = require('../model/m_history')
 const { postOrderItem } = require('../model/m_order')
 const helper = require('../helper/my_helper')
 
 module.exports = {
     getAllHistory: async (request, response) => {
+        let { page, limit } = request.query
+        page = page == undefined ? 1 : parseInt(page)
+        limit = limit == undefined ? 9 : parseInt(limit)
+
+        const totalData = await getHistoryCount()
+        const totalPage = Math.ceil(totalData / limit)
+        let offset = page * limit - limit
+
+        let prevLink = helper.getPrevLink(page, request.query)
+        let nextLink = helper.getNextLink(page, totalPage, request.query)
+
+        const pageInfo = {
+            page, totalPage, limit, totalData,
+            prevLink: prevLink && `http://127.0.0.1:3000/history?${prevLink}`,
+            nextLink: nextLink && `http://127.0.0.1:3000/history?${nextLink}`
+        }
+
         try {
-            const result = await getAllHistory()
-            return helper.response(response, 200, "Success Get Histories", result)
+            const result = await getHistory(limit, offset)
+            return helper.response(response, 200, "Success Get Histories", result, pageInfo)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }

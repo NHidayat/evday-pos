@@ -8,6 +8,13 @@ module.exports = {
 			})
 		})
 	},
+	getHistory: (limit, offset) => {
+		return new Promise((resolve, reject) => {
+			connection.query(`SELECT * FROM history LIMIT ${limit} OFFSET ${offset}`, (error, result) => {
+				!error ? resolve(result) : reject(new Error(error))
+			})
+		})
+	},
 	getHistoryById: (id, itemsData) => {
 		return new Promise((resolve, reject) => {
 			connection.query('SELECT * FROM history WHERE history_id = ?', id, (error, result) => {
@@ -46,6 +53,13 @@ module.exports = {
 				} else {
 					reject(new Error(error))
 				}
+			})
+		})
+	},
+	getHistoryCount: () => {
+		return new Promise((resolve, reject) => {
+			connection.query('SELECT COUNT(*) AS total FROM history', (error, result) => {
+				!error ? resolve(result[0].total) : reject(new Error(error))
 			})
 		})
 	},
