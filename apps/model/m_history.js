@@ -4,8 +4,35 @@ module.exports = {
 	getItemByHistory: (id) => {
 		return new Promise((resolve, reject) => {
 			connection.query('SELECT * FROM order_item WHERE history_id = ?', id, (error, result) => {
-				!error ? resolve(result) : reject(new Eror(error))
 				!error ? resolve(result) : reject(new Error(error))
+			})
+		})
+	},
+	getHistoryWeekCount: () => {
+		return new Promise((resolve, reject) => {
+			connection.query('SELECT COUNT(*) AS total FROM history WHERE YEARWEEK(history_created_at) = YEARWEEK(NOW())', (error, result) => {
+				!error ? resolve(result[0].total) : reject(new Error(error))
+			})
+		})
+	},
+	getHistoryTodayIncome: () => {
+		return new Promise((resolve, reject) => {
+			connection.query('SELECT SUM(history_total) AS total FROM history WHERE DATE(history_created_at) = CURDATE()', (error, result) => {
+				!error ? resolve(result[0].total) : reject(new Error(error))
+			})
+		})
+	},
+	getDailyIncome: () => {
+		return new Promise((resolve, reject) => {
+			connection.query('SELECT DATE(history_created_at) as date, SUM(history_total) AS total FROM history GROUP BY  DATE(history_created_at)', (error, result) => {
+				!error ? resolve(result) : reject(new Error(error))
+			})
+		})
+	},
+	getHistoryThisYearIncome: () => {
+		return new Promise((resolve, reject) => {
+			connection.query('SELECT SUM(history_total) AS total FROM history WHERE YEAR(history_created_at) = YEAR(NOW())', (error, result) => {
+				!error ? resolve(result[0].total) : reject(new Error(error))
 			})
 		})
 	},
@@ -18,7 +45,7 @@ module.exports = {
 	},
 	getHistory: (limit, offset) => {
 		return new Promise((resolve, reject) => {
-			connection.query(`SELECT * FROM history LIMIT ${limit} OFFSET ${offset}`, (error, result) => {
+			connection.query(`SELECT * FROM history ORDER BY history_created_at DESC LIMIT ${limit} OFFSET ${offset}`, (error, result) => {
 				!error ? resolve(result) : reject(new Error(error))
 			})
 		})
@@ -52,7 +79,7 @@ module.exports = {
 			connection.query('INSERT INTO history SET ?', setData, (error, result) => {
 				if (!error) {
 					const insertId = result.insertId
-					const { history_invoice, history_created_at, history_ppn, history_total } = setData
+					const { history_invoice, history_created_at, history_ppn, history_total, cashier_name } = setData
 					const newResult = {
 						history_id: result.insertId,
 						...setData

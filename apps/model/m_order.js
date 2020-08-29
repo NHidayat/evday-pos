@@ -14,12 +14,13 @@ module.exports = {
 				}
 				connection.query('INSERT INTO order_item SET ?', setItemData, (error, result) => {
 					if (!error) {
-						const { history_id, history_invoice, history_created_at, history_ppn, history_total } = historyData
+						const { history_id, history_invoice, history_created_at, history_ppn, history_total, cashier_name } = historyData
 						const newResult = {
 							history_id,
 							history_invoice,
 							history_created_at,
 							items: itemsData,
+							cashier_name,
 							history_ppn,
 							history_total
 						}

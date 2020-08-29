@@ -8,7 +8,7 @@ router.get('/', getAllProduct)
 router.get('/:id', getProductById)
 
 // GET BY Name
-router.get('/search/:product_name', getProductByName)
+router.get('/search/q', getProductByName)
 
 // POST
 router.post('/', postProduct)

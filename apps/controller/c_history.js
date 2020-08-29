@@ -1,4 +1,4 @@
-const { getAllHistory, getHistoryById, getItemByHistory, postHistory, getHistoryCount, getHistory } = require('../model/m_history')
+const { getAllHistory, getHistoryById, getItemByHistory, postHistory, getHistoryCount, getHistory, getHistoryWeekCount, getHistoryTodayIncome, getHistoryThisYearIncome, getDailyIncome } = require('../model/m_history')
 const { postOrderItem } = require('../model/m_order')
 const helper = require('../helper/my_helper')
 
@@ -8,6 +8,11 @@ module.exports = {
         page = page == undefined ? 1 : parseInt(page)
         limit = limit == undefined ? 9 : parseInt(limit)
 
+        const dataThisWeek = await getHistoryWeekCount()
+        const todayIncome = await getHistoryTodayIncome()
+        const thisYearIncome = await getHistoryThisYearIncome()
+        const dailyIncome = await getDailyIncome()
+
         const totalData = await getHistoryCount()
         const totalPage = Math.ceil(totalData / limit)
         let offset = page * limit - limit
@@ -16,13 +21,23 @@ module.exports = {
         let nextLink = helper.getNextLink(page, totalPage, request.query)
 
         const pageInfo = {
-            page, totalPage, limit, totalData,
+            page,
+            totalPage,
+            limit,
+            totalData,
+            dataThisWeek,
+            todayIncome,
+            thisYearIncome,
+            dailyIncome,
             prevLink: prevLink && `http://127.0.0.1:3000/history?${prevLink}`,
             nextLink: nextLink && `http://127.0.0.1:3000/history?${nextLink}`
         }
 
         try {
             const result = await getHistory(limit, offset)
+            for (let i = 0; i < result.length; i++) {
+                result[i].items = await getItemByHistory(result[i].history_id)
+            }
             return helper.response(response, 200, "Success Get Histories", result, pageInfo)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
@@ -53,11 +68,13 @@ module.exports = {
         const itemsTotal = itemsData.map(item => item.subtotal).reduce((a, b) => a + b)
         const history_ppn = (0.1 * itemsTotal)
         const history_total = itemsTotal + history_ppn
+        const cashier_name = 'Pevita Pearce'
         try {
             const invoiceData = {
                 history_invoice,
                 history_ppn,
                 history_total,
+                cashier_name,
                 history_created_at: new Date()
             }
             const insertHistory = await postHistory(invoiceData)

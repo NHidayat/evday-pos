@@ -4,11 +4,10 @@ const qs = require('querystring')
 
 module.exports = {
     getAllProduct: async (request, response) => {
-        let { page, limit, orderBy, sort } = request.query
+        let { page, limit, orderBy } = request.query
         page = page == undefined ? 1 : parseInt(page)
         limit = limit == undefined ? 9 : parseInt(limit)
-        orderBy = orderBy == undefined ? 'product_price' : orderBy
-        sort = sort == undefined ? 'DESC' : sort
+        orderBy = orderBy == undefined ? 'product_price ASC' : orderBy
 
         const totalData = await getProductCount()
         const totalPage = Math.ceil(totalData / limit)
@@ -18,13 +17,13 @@ module.exports = {
         let nextLink = helper.getNextLink(page, totalPage, request.query)
 
         const pageInfo = {
-            page, totalPage, limit, totalData, orderBy, sort,
+            page, totalPage, limit, totalData, orderBy,
             prevLink: prevLink && `http://127.0.0.1:3000/product?${prevLink}`,
             nextLink: nextLink && `http://127.0.0.1:3000/product?${nextLink}`
         }
 
         try {
-            const result = await getProduct(orderBy, sort, limit, offset)
+            const result = await getProduct(orderBy, limit, offset)
             return helper.response(response, 200, "Success Get Product", result, pageInfo)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
@@ -45,7 +44,7 @@ module.exports = {
         }
     },
     getProductByName: async (request, response) => {
-        const { product_name } = request.params
+        const { product_name } = request.query
         const result = await getProductByName(product_name)
         try {
             if (result.length > 0) {
@@ -61,12 +60,12 @@ module.exports = {
         const { product_name, product_image, product_price, category_id, product_status } = request.body
 
         if (product_name == undefined || product_name == '' || product_image == undefined || product_image == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '' ) {
-            return helper.response(response, 400, "Form ata must be complete, dude", null)
+            return helper.response(response, 400, "Form data must be complete, dude", 'cek again')
         }
         try {
             const setData = {
                 product_name,
-                product_image,
+                product_image: 'assets/menu/' + product_image,
                 product_price,
                 category_id,
                 product_created_at: new Date(),
@@ -84,7 +83,7 @@ module.exports = {
         const { product_name, product_image, product_price, category_id, product_status } = request.body
 
         if (product_name == undefined || product_name == '' || product_image == undefined || product_image == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '' ) {
-            return helper.response(response, 400, "Form ata must be complete, dude", null)
+            return helper.response(response, 400, "Form data must be complete, dude", null)
         } 
         try {
             const cekId = await getProductById(id)
