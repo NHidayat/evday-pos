@@ -8,6 +8,13 @@ module.exports = {
 			})
 		})
 	},
+	getActiveProduct: (order, limit, offset) => {
+		return new Promise((resolve, reject) => {
+			connection.query(`SELECT * FROM product p INNER JOIN category c ON p.category_id = c.category_id Where product_status = 1 ORDER BY ${order} LIMIT ${limit} OFFSET ${offset}`, (error, result) => {
+				!error ? resolve(result) : reject(new Error(error))
+			})
+		})
+	},
 	getProductCount: () => {
 		return new Promise((resolve, reject) => {
 			connection.query('SELECT COUNT(*) AS total FROM product', (error, result) => {
@@ -26,6 +33,14 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			console.log(product_name)
 			connection.query(`SELECT * FROM product WHERE product_name LIKE '%${product_name}%'`, (error, result) => {
+				!error ? resolve(result) : reject(new Error(error))
+			})
+		})
+	},
+	getActiveProductByName: (product_name) => {
+		return new Promise((resolve, reject) => {
+			console.log(product_name)
+			connection.query(`SELECT * FROM product WHERE product_name LIKE '%${product_name}%' AND product_status = 1`, (error, result) => {
 				!error ? resolve(result) : reject(new Error(error))
 			})
 		})

@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { getAllProduct, getProductById, getProductByName, postProduct, patchProduct, deleteProduct } = require('../controller/c_product')
+const { getAllProduct, getProductById, getProductByName, postProduct, patchProduct, deleteProduct, getActiveProduct } = require('../controller/c_product')
 
 // GET
 router.get('/', getAllProduct)
@@ -9,6 +9,9 @@ router.get('/:id', getProductById)
 
 // GET BY Name
 router.get('/search/q', getProductByName)
+
+// GET Active Product
+router.get('/active/beta', getActiveProduct)
 
 // POST
 router.post('/', postProduct)

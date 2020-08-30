@@ -1,4 +1,4 @@
-const { getProduct, getProductCount, getProductById, postProduct, patchProduct, deleteProduct, getProductByName } = require('../model/m_product')
+const { getProduct, getProductCount, getProductById, postProduct, patchProduct, deleteProduct, getActiveProductByName, getActiveProduct } = require('../model/m_product')
 const helper = require('../helper/my_helper')
 const qs = require('querystring')
 
@@ -29,6 +29,32 @@ module.exports = {
             return helper.response(response, 400, "Bad Request", error)
         }
     },
+    getActiveProduct: async (request, response) => {
+        let { page, limit, orderBy } = request.query
+        page = page == undefined ? 1 : parseInt(page)
+        limit = limit == undefined ? 9 : parseInt(limit)
+        orderBy = orderBy == undefined ? 'product_price ASC' : orderBy
+
+        const totalData = await getProductCount()
+        const totalPage = Math.ceil(totalData / limit)
+        let offset = page * limit - limit
+
+        let prevLink = helper.getPrevLink(page, request.query)
+        let nextLink = helper.getNextLink(page, totalPage, request.query)
+
+        const pageInfo = {
+            page, totalPage, limit, totalData, orderBy,
+            prevLink: prevLink && `http://127.0.0.1:3000/product?${prevLink}`,
+            nextLink: nextLink && `http://127.0.0.1:3000/product?${nextLink}`
+        }
+
+        try {
+            const result = await getActiveProduct(orderBy, limit, offset)
+            return helper.response(response, 200, "Success Get Product", result, pageInfo)
+        } catch (error) {
+            return helper.response(response, 400, "Bad Request", error)
+        }
+    },
     getProductById: async (request, response) => {
         const { id } = request.params
         try {
@@ -45,7 +71,7 @@ module.exports = {
     },
     getProductByName: async (request, response) => {
         const { product_name } = request.query
-        const result = await getProductByName(product_name)
+        const result = await getActiveProductByName(product_name)
         try {
             if (result.length > 0) {
                 return helper.response(response, 200, "Success Get Product by Name", result)
