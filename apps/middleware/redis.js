@@ -3,6 +3,17 @@ const client = redis.createClient()
 const helper = require('../helper/my_helper')
 
 module.exports = {
+	getProductRedis: (request, response, next) => {
+		client.get(`getproduct:${JSON.stringify(request.query)}`,(error, result) => {
+			if (!error && result !== null) {
+				console.log('data ada di dalam redis')
+				return helper.response(response, 200, `Success get product`, JSON.parse(result) )
+			} else {
+				console.log('data tidak ada di dalam redis')
+				next()
+			}
+		})
+	},
 	getProductByIdRedis: (request, response, next) => {
 		const { id } = request.params
 		client.get(`getproductbyid:${id}`,(error, result) => {
@@ -20,5 +31,28 @@ module.exports = {
 			console.log(result)
 		})
 		next()
+	},
+	getHistoriesRedis: (request, response, next) => {
+		client.get(`gethistorybyid:${request.query}`,(error, result) => {
+			if (!error && result !== null) {
+				console.log('data ada di dalam redis')
+				return helper.response(response, 200, `Success get histories`, JSON.parse(result) )
+			} else {
+				console.log('data tidak ada di dalam redis')
+				next()
+			}
+		})
+	},
+	getHistoryByIdRedis: (request, response, next) => {
+		const { id } =  request.params
+		client.get(`gethistorybyid:${id}`,(error, result) => {
+			if (!error && result !== null) {
+				console.log('data ada di dalam redis')
+				return helper.response(response, 200, `Success get histories`, JSON.parse(result) )
+			} else {
+				console.log('data tidak ada di dalam redis')
+				next()
+			}
+		})
 	}
 }

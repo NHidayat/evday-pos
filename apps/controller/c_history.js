@@ -1,6 +1,8 @@
 const { getAllHistory, getHistoryById, getItemByHistory, postHistory, getHistoryCount, getHistory, getHistoryWeekCount, getHistoryTodayIncome, getHistoryThisYearIncome, getDailyIncome } = require('../model/m_history')
 const { postOrderItem } = require('../model/m_order')
 const helper = require('../helper/my_helper')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
     getAllHistory: async (request, response) => {
@@ -38,6 +40,7 @@ module.exports = {
             for (let i = 0; i < result.length; i++) {
                 result[i].items = await getItemByHistory(result[i].history_id)
             }
+            client.set(`gethistories:${JSON.stringify(request.query)}`, JSON.stringify(result))
             return helper.response(response, 200, "Success Get Histories", result, pageInfo)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
@@ -48,6 +51,7 @@ module.exports = {
             const { id } = request.params
             const cartResult = await getItemByHistory(id)
             const result = await getHistoryById(id, cartResult)
+            client.set(`gethistorybyid:${id}`, JSON.stringify(result))
 
             if (result.length > 0) {
                 return helper.response(response, 200, `Success Get History by ID ${id}`, result)

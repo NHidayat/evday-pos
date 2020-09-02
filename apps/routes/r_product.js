@@ -1,8 +1,8 @@
 const router = require('express').Router()
 const { getAllProduct, getProductById, getProductByName, postProduct, patchProduct, deleteProduct, getActiveProduct } = require('../controller/c_product')
-const { authorization } = require('../middleware/auth')
+const { authorizationAdmin, authorizationAll } = require('../middleware/auth')
 const multer = require('multer')
-const { getProductByIdRedis, clearDataProductRedis } = require('../middleware/redis')
+const { getProductRedis, getProductByIdRedis, clearDataProductRedis } = require('../middleware/redis')
 
 const storage = multer.diskStorage({
 	destination: (request, file, callback) => {
@@ -18,24 +18,24 @@ const storage = multer.diskStorage({
 let upload = multer({ storage: storage })
 
 // GET
-router.get('/', authorization, getAllProduct)
+router.get('/', authorizationAdmin, getProductRedis, getAllProduct)
 
 // GET BY ID
-router.get('/:id', getProductByIdRedis, getProductById)
+router.get('/:id', authorizationAdmin, getProductByIdRedis, getProductById)
 
 // GET BY Name
-router.get('/search/q', getProductByName)
+router.get('/search/q', authorizationAll, getProductByName)
 
 // GET Active Product
-router.get('/active/beta', getActiveProduct)
+router.get('/active/beta', authorizationAll, getActiveProduct)
 
 // POST
-router.post('/', upload.single('product_image'), postProduct)
+router.post('/', authorizationAdmin, upload.single('product_image'), postProduct)
 
 // PATCH/PUT
-router.patch('/:id', clearDataProductRedis, patchProduct)
+router.patch('/:id', authorizationAdmin, clearDataProductRedis, patchProduct)
 
 // DELETE
-router.delete('/:id', clearDataProductRedis, deleteProduct)
+router.delete('/:id', authorizationAdmin, clearDataProductRedis, deleteProduct)
 
 module.exports = router
