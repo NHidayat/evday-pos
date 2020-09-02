@@ -3,6 +3,7 @@ const helper = require('../helper/my_helper')
 const qs = require('querystring')
 const redis = require('redis')
 const client = redis.createClient()
+const fs = require('fs')
 
 module.exports = {
     getAllProduct: async (request, response) => {
@@ -19,7 +20,11 @@ module.exports = {
         let nextLink = helper.getNextLink(page, totalPage, request.query)
 
         const pageInfo = {
-            page, totalPage, limit, totalData, orderBy,
+            page,
+            totalPage,
+            limit,
+            totalData,
+            orderBy,
             prevLink: prevLink && `http://127.0.0.1:3000/product?${prevLink}`,
             nextLink: nextLink && `http://127.0.0.1:3000/product?${nextLink}`
         }
@@ -46,7 +51,11 @@ module.exports = {
         let nextLink = helper.getNextLink(page, totalPage, request.query)
 
         const pageInfo = {
-            page, totalPage, limit, totalData, orderBy,
+            page,
+            totalPage,
+            limit,
+            totalData,
+            orderBy,
             prevLink: prevLink && `http://127.0.0.1:3000/product?${prevLink}`,
             nextLink: nextLink && `http://127.0.0.1:3000/product?${nextLink}`
         }
@@ -89,7 +98,7 @@ module.exports = {
     postProduct: async (request, response) => {
         const { product_name, product_price, category_id, product_status } = request.body
 
-        if (product_name == undefined || product_name == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '' ) {
+        if (product_name == undefined || product_name == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '') {
             return helper.response(response, 400, "Form data must be complete, dude", 'cek again')
         }
         try {
@@ -114,9 +123,9 @@ module.exports = {
         const { id } = request.params
         const { product_name, product_image, product_price, category_id, product_status } = request.body
 
-        if (product_name == undefined || product_name == '' || product_image == undefined || product_image == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '' ) {
+        if (product_name == undefined || product_name == '' || product_image == undefined || product_image == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '') {
             return helper.response(response, 400, "Form data must be complete, dude", null)
-        } 
+        }
         try {
             const cekId = await getProductById(id)
             if (cekId.length > 0) {
@@ -143,6 +152,11 @@ module.exports = {
             const cekId = await getProductById(id)
             if (cekId.length > 0) {
                 const result = await deleteProduct(id)
+                const image = cekId[0].product_image
+                fs.unlink(`./uploads/${image}`, function(err) {
+                    if (err) throw err;
+                    console.log('File deleted!');
+                });
                 return helper.response(response, 201, "Product Deleted", result)
             } else {
                 return helper.response(response, 404, `Product By Id ${id} not Found`)
