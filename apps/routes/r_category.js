@@ -1,17 +1,18 @@
 const router = require('express').Router()
 const { getAllCategory, getCategoryById, postCategory, patchCategory } = require('../controller/c_category')
+const { authorizationAdmin, authorizationAll } = require('../middleware/auth')
 
 // GET
-router.get('/', getAllCategory)
+router.get('/', authorizationAll, getAllCategory)
 
 // GET BY ID
-router.get('/:id', getCategoryById)
+router.get('/:id', authorizationAll, getCategoryById)
 
 // POST
-router.post('/', postCategory)
+router.post('/', authorizationAdmin, postCategory)
 
 // PATCH/PUT
-router.patch('/:id', patchCategory)
+router.patch('/:id', authorizationAdmin, patchCategory)
 
 // // DELETE
 // router.delete('/:id', deleteCategory)
