@@ -1,6 +1,8 @@
 const { getProduct, getProductCount, getProductById, postProduct, patchProduct, deleteProduct, getActiveProductByName, getActiveProduct } = require('../model/m_product')
 const helper = require('../helper/my_helper')
 const qs = require('querystring')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
     getAllProduct: async (request, response) => {
@@ -24,6 +26,7 @@ module.exports = {
 
         try {
             const result = await getProduct(orderBy, limit, offset)
+            client.set(`getproduct:${JSON.stringify(request.query)}`, JSON.stringify(result))
             return helper.response(response, 200, "Success Get Product", result, pageInfo)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
@@ -59,9 +62,10 @@ module.exports = {
         const { id } = request.params
         try {
             const result = await getProductById(id)
-
+            // set data to redis
+            client.setex(`getproductbyid:${id}`, 3600, JSON.stringify(result))
             if (result.length > 0) {
-                return helper.response(response, 200, "Success Get Product", result)
+                return helper.response(response, 200, `Success get product by id ${id}`, result)
             } else {
                 return helper.response(response, 404, `Product By Id ${id} not Found`, result)
             }
@@ -83,20 +87,22 @@ module.exports = {
         }
     },
     postProduct: async (request, response) => {
-        const { product_name, product_image, product_price, category_id, product_status } = request.body
+        const { product_name, product_price, category_id, product_status } = request.body
 
-        if (product_name == undefined || product_name == '' || product_image == undefined || product_image == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '' ) {
+        if (product_name == undefined || product_name == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '' ) {
             return helper.response(response, 400, "Form data must be complete, dude", 'cek again')
         }
         try {
+            console.log(request.file)
             const setData = {
                 product_name,
-                product_image: 'assets/menu/' + product_image,
+                product_image: request.file === undefined ? '' : request.file.filename,
                 product_price,
                 category_id,
                 product_created_at: new Date(),
                 product_status
             }
+            // console.log(setData)
             const result = await postProduct(setData)
             return helper.response(response, 201, "Product Created", result)
         } catch (e) {
