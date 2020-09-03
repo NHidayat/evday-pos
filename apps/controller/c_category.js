@@ -17,9 +17,9 @@ module.exports = {
         try {
             const { id } = request.params
             const result = await getCategoryById(id)
-            client.set(`getcategorybyid:${id}`, JSON.stringify(result))
 
             if (result.length > 0) {
+                client.set(`getcategorybyid:${id}`, JSON.stringify(result))
                 return helper.response(response, 200, "Success Get category", result)
             } else {
                 return helper.response(response, 404, `category by ID ${id} not found`, result)
@@ -74,7 +74,7 @@ module.exports = {
     deleteCategory: async (request, response) => {
         try {
             const { id } = request.params
-            const cekId = getCategoryById(id)
+            const cekId = await getCategoryById(id)
 
             if (cekId.length > 0) {
                 const result = await deleteCategory(id)
