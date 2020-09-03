@@ -1,10 +1,13 @@
 const { getAllCategory, getCategoryById, postCategory, patchCategory, deleteCategory } = require('../model/m_category')
 const helper = require('../helper/my_helper')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
     getAllCategory: async (request, response) => {
         try {
             const result = await getAllCategory()
+            client.set('getcategories', JSON.stringify(result))
             return helper.response(response, 200, "Success Get category", result)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
@@ -14,6 +17,7 @@ module.exports = {
         try {
             const { id } = request.params
             const result = await getCategoryById(id)
+            client.set(`getcategorybyid:${id}`, JSON.stringify(result))
 
             if (result.length > 0) {
                 return helper.response(response, 200, "Success Get category", result)

@@ -2,7 +2,7 @@ const router = require('express').Router()
 const { getAllProduct, getProductById, getProductByName, postProduct, patchProduct, deleteProduct, getActiveProduct } = require('../controller/c_product')
 const { authorizationAdmin, authorizationAll } = require('../middleware/auth')
 const multer = require('multer')
-const { getProductRedis, getProductByIdRedis, clearDataProductRedis } = require('../middleware/redis')
+const { getProductRedis, getProductByIdRedis, clearDataRedis } = require('../middleware/redis')
 
 const storage = multer.diskStorage({
 	destination: (request, file, callback) => {
@@ -30,12 +30,12 @@ router.get('/search/q', authorizationAll, getProductByName)
 router.get('/active/beta', authorizationAll, getActiveProduct)
 
 // POST
-router.post('/', authorizationAdmin, upload.single('product_image'), postProduct)
+router.post('/', authorizationAdmin, upload.single('product_image'), clearDataRedis, postProduct)
 
 // PATCH/PUT
-router.patch('/:id', authorizationAdmin, clearDataProductRedis, patchProduct)
+router.patch('/:id', authorizationAdmin, clearDataRedis, patchProduct)
 
 // DELETE
-router.delete('/:id', authorizationAdmin, clearDataProductRedis, deleteProduct)
+router.delete('/:id', authorizationAdmin, clearDataRedis, deleteProduct)
 
 module.exports = router

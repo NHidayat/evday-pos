@@ -26,7 +26,7 @@ module.exports = {
 			}
 		})
 	},
-	clearDataProductRedis:  (request, response, next) => {
+	clearDataRedis:  (request, response, next) => {
 		client.flushall((error, result) => {
 			console.log(result)
 		})
@@ -54,5 +54,29 @@ module.exports = {
 				next()
 			}
 		})
-	}
+	},
+	getCategoriesRedis: (request, response, next) => {
+		const { id } =  request.params
+		client.get('getcategories',(error, result) => {
+			if (!error && result !== null) {
+				console.log('data ada di dalam redis')
+				return helper.response(response, 200, `Success get categories`, JSON.parse(result) )
+			} else {
+				console.log('data tidak ada di dalam redis')
+				next()
+			}
+		})
+	},
+	getCategoryByIdRedis: (request, response, next) => {
+		const { id } =  request.params
+		client.get(`getcategorybyid:${id}`,(error, result) => {
+			if (!error && result !== null) {
+				console.log('data ada di dalam redis')
+				return helper.response(response, 200, `Success get category id ${id}`, JSON.parse(result) )
+			} else {
+				console.log('data tidak ada di dalam redis')
+				next()
+			}
+		})
+	},
 }
