@@ -71,9 +71,9 @@ module.exports = {
         const { id } = request.params
         try {
             const result = await getProductById(id)
-            // set data to redis
-            client.setex(`getproductbyid:${id}`, 3600, JSON.stringify(result))
             if (result.length > 0) {
+                // set data to redis
+                client.setex(`getproductbyid:${id}`, 3600, JSON.stringify(result))
                 return helper.response(response, 200, `Success get product by id ${id}`, result)
             } else {
                 return helper.response(response, 404, `Product By Id ${id} not Found`, result)

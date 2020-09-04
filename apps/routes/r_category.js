@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { getAllCategory, getCategoryById, postCategory, patchCategory, deleteCategory } = require('../controller/c_category')
 const { authorizationAdmin, authorizationAll } = require('../middleware/auth')
-const { getCategoriesRedis, getCategoryByIdRedis, clearDataRedis } = require('../middleware/redis')
+const { getCategoriesRedis, getCategoryByIdRedis, clearDataCategoryRedis } = require('../middleware/redis')
 
 // GET
 router.get('/', authorizationAll, getCategoriesRedis, getAllCategory)
@@ -10,12 +10,12 @@ router.get('/', authorizationAll, getCategoriesRedis, getAllCategory)
 router.get('/:id', authorizationAll, getCategoryByIdRedis, getCategoryById)
 
 // POST
-router.post('/', authorizationAdmin, clearDataRedis, postCategory)
+router.post('/', authorizationAdmin, clearDataCategoryRedis, postCategory)
 
 // PATCH/PUT
-router.patch('/:id', authorizationAdmin, clearDataRedis, patchCategory)
+router.patch('/:id', authorizationAdmin, clearDataCategoryRedis, patchCategory)
 
 // // DELETE
-router.delete('/:id', authorizationAdmin, clearDataRedis, deleteCategory)
+router.delete('/:id', authorizationAdmin, clearDataCategoryRedis, deleteCategory)
 
 module.exports = router

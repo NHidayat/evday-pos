@@ -26,6 +26,14 @@ module.exports = {
 			}
 		})
 	},
+	clearDataProductRedis:  (request, response, next) => {
+		client.keys('getproduct*', (error, keys) => {
+			keys.map(v => {
+				client.del(v)
+			})
+		})
+		next()
+	},
 	clearDataRedis:  (request, response, next) => {
 		client.flushall((error, result) => {
 			console.log(result)
@@ -33,7 +41,7 @@ module.exports = {
 		next()
 	},
 	getHistoriesRedis: (request, response, next) => {
-		client.get(`gethistorybyid:${request.query}`,(error, result) => {
+		client.get(`gethistories:${JSON.stringify(request.query)}`,(error, result) => {
 			if (!error && result !== null) {
 				console.log('data ada di dalam redis')
 				return helper.response(response, 200, `Success get histories`, JSON.parse(result) )
@@ -54,6 +62,14 @@ module.exports = {
 				next()
 			}
 		})
+	},
+	clearDataHistoryRedis:  (request, response, next) => {
+		client.keys('gethistor*', (error, keys) => {
+			keys.map(v => {
+				client.del(v)
+			})
+		})
+		next()
 	},
 	getCategoriesRedis: (request, response, next) => {
 		const { id } =  request.params
@@ -78,5 +94,13 @@ module.exports = {
 				next()
 			}
 		})
+	},
+	clearDataCategoryRedis:  (request, response, next) => {
+		client.keys('getcategor*', (error, keys) => {
+			keys.map(v => {
+				client.del(v)
+			})
+		})
+		next()
 	},
 }
