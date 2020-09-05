@@ -31,7 +31,8 @@ module.exports = {
 
         try {
             const result = await getProduct(orderBy, limit, offset)
-            client.set(`getproduct:${JSON.stringify(request.query)}`, JSON.stringify(result))
+            const newResult = { result, pageInfo }
+            client.set(`getproduct:${JSON.stringify(request.query)}`, JSON.stringify(newResult))
             return helper.response(response, 200, "Success Get Product", result, pageInfo)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
@@ -97,12 +98,17 @@ module.exports = {
     },
     postProduct: async (request, response) => {
         const { product_name, product_price, category_id, product_status } = request.body
+        const product_image = request.file
 
-        if (product_name == undefined || product_name == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '') {
+        if (product_name == undefined || product_name == '' ||
+            product_price == undefined || product_price == '' ||
+            category_id == undefined || category_id == '' ||
+            product_status == undefined || product_status == '' ||
+            product_image == undefined || product_image == ''
+        ) {
             return helper.response(response, 400, "Form data must be complete, dude", 'cek again')
         }
         try {
-            console.log(request.file)
             const setData = {
                 product_name,
                 product_image: request.file === undefined ? '' : request.file.filename,
@@ -121,29 +127,48 @@ module.exports = {
     },
     patchProduct: async (request, response) => {
         const { id } = request.params
-        const { product_name, product_image, product_price, category_id, product_status } = request.body
+        const { product_name, product_price, category_id, product_status } = request.body
+        const product_image = request.file
 
-        if (product_name == undefined || product_name == '' || product_image == undefined || product_image == '' || product_price == undefined || product_price == '' || category_id == undefined || category_id == '' || product_status == undefined || product_status == '') {
+        if (product_name == undefined || product_name == '' ||
+            product_price == undefined || product_price == '' ||
+            category_id == undefined || category_id == '' ||
+            product_status == undefined || product_status == '') {
             return helper.response(response, 400, "Form data must be complete, dude", null)
         }
-        try {
-            const cekId = await getProductById(id)
-            if (cekId.length > 0) {
-                const setData = {
-                    product_name,
-                    product_image,
-                    product_price,
-                    category_id,
-                    product_updated_at: new Date(),
-                    product_status
-                }
+
+        const cekId = await getProductById(id)
+        const setData = {
+            product_name,
+            product_price,
+            category_id,
+            product_updated_at: new Date(),
+            product_status
+        }
+        if (product_image == '' || product_image == undefined) {
+            try {
+                const set = setData
                 const result = await patchProduct(setData, id)
                 return helper.response(response, 201, "Product Updated", result)
-            } else {
-                return helper.response(response, 404, `Product By Id ${id} not Found`)
+                return helper.response(response, 404, `Product By Id ${id} Not Found`)
+            } catch (e) {
+                return helper.response(response, 400, "Bad Request", e)
             }
-        } catch (e) {
-            return helper.response(response, 400, "Bad Request", e)
+
+        } else {
+            try {
+                const image = cekId[0].product_image
+                fs.unlink(`./uploads/${image}`, function(err) {
+                    if (err) throw err;
+                    console.log('File deleted!');
+                });
+                setData.product_image = product_image.filename
+                const set = setData
+                const result = await patchProduct(setData, id)
+                return helper.response(response, 201, "Product Updated", result)
+            } catch (e) {
+                return helper.response(response, 400, "Bad Request", e)
+            }
         }
     },
     deleteProduct: async (request, response) => {
@@ -156,7 +181,7 @@ module.exports = {
                 fs.unlink(`./uploads/${image}`, function(err) {
                     if (err) throw err;
                     console.log('File deleted!');
-                });
+                })
                 return helper.response(response, 201, "Product Deleted", result)
             } else {
                 return helper.response(response, 404, `Product By Id ${id} not Found`)

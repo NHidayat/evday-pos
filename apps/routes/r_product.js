@@ -3,6 +3,7 @@ const { getAllProduct, getProductById, getProductByName, postProduct, patchProdu
 const { authorizationAdmin, authorizationAll } = require('../middleware/auth')
 const { getProductRedis, getProductByIdRedis, clearDataProductRedis } = require('../middleware/redis')
 const uploadImage = require('../middleware/multer')
+const checkId = require('../middleware/checkProduct')
 
 // GET
 router.get('/', authorizationAdmin, getProductRedis, getAllProduct)
@@ -20,7 +21,7 @@ router.get('/active/beta', authorizationAll, getActiveProduct)
 router.post('/', authorizationAdmin, clearDataProductRedis, uploadImage, postProduct)
 
 // PATCH/PUT
-router.patch('/:id', authorizationAdmin, clearDataProductRedis, patchProduct)
+router.patch('/:id', authorizationAdmin, clearDataProductRedis, checkId, uploadImage, patchProduct)
 
 // DELETE
 router.delete('/:id', authorizationAdmin, clearDataProductRedis, deleteProduct)
