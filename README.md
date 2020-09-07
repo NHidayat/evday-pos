@@ -34,8 +34,22 @@ DB_HOST=localhost // Database host
 DB_USER=your_user
 DB_PASS=yout_password
 DB_NAME=your_database
+
+PORT=this_project_port //example: 3000
+IP=this_poject_ip_address // example: 127.0.0.1
 ```
 
 ## End Point
 
-Updating...
+<strong>Product</strong>
+
+| Name                | Method    | Link          |
+| ------------------- | --------- | ------------- |
+| Get Product         | GET       | /             |
+| Get Product By Id   | GET       | /:id          |
+| Search Product      | GET       | /search/q     |
+| Get Active Product  | GET       | /active/beta  |
+| Insert Product      | POST      | /             |
+| Edit Product        | PATCH     | /:id          |
+| Delete Product      | DELETE    | /:id          |
+
