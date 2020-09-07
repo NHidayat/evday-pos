@@ -50,7 +50,7 @@ IP=this_poject_ip_address // example: 127.0.0.1
 | Edit User  | POST      | `user/edit`         | Body `{ "user_name": "admin", "user_status": 1 or 0 , "user_password": "Admin123" }` |
 
 
-<h4>Product</h4>
+### Product
 
 | Name                  | Method    | Link          | Request       |
 | --------------------- | --------- | ------------- | ------------- |
@@ -63,7 +63,7 @@ IP=this_poject_ip_address // example: 127.0.0.1
 | Delete Product        | DELETE    | `/product/:id`      |         |
 
 
-<h4>History</h4>
+### History
 
 <strong>Checkout</strong>
 
@@ -89,8 +89,9 @@ Set the POST mehod in route `/history` and set the items data. The subtotals of 
 }
 ```
 
-### Other
+<strong>Other</strong>
 | Name                  | Method    | Link                      | Note                                 |
 | -----------------     | --------- | ------------------------- | ------------------------------------ |
-| Get Rescent Orders    | GET       | `/history/page=1&limit=4` | You can customize the page and limit |
+| Get Recent Orders     | GET       | `/history/page=1&limit=4` | You can customize the page and limit |
+| Get Order By Id       | GET       | `/history/:id`            |   |
 
