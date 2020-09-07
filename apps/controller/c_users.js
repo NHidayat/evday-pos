@@ -36,7 +36,6 @@ module.exports = {
             const checkUserData = await cekUser(user_email)
 
             if (checkUserData.length >= 1) {
-                console.log(true)
                 if (checkUserData[0].user_status !== 1) {
                     return helper.response(response, 403, "Your account is not active, please contact the admin")
                 } else {
@@ -73,7 +72,6 @@ module.exports = {
         const encryptPassword = bcrypt.hashSync(user_password, salt)
         try {
             const cekId = await getUserById(id)
-            console.log(cekId.length)
             if (cekId.length > 0) {
                 const setData = {
                     user_name,

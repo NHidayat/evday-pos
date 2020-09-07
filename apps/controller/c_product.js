@@ -73,7 +73,6 @@ module.exports = {
         try {
             const result = await getProductById(id)
             if (result.length > 0) {
-                // set data to redis
                 client.setex(`getproductbyid:${id}`, 3600, JSON.stringify(result))
                 return helper.response(response, 200, `Success get product by id ${id}`, result)
             } else {
@@ -117,7 +116,6 @@ module.exports = {
                 product_created_at: new Date(),
                 product_status
             }
-            // console.log(setData)
             const result = await postProduct(setData)
             return helper.response(response, 201, "Product Created", result)
         } catch (e) {
@@ -160,7 +158,6 @@ module.exports = {
                 const image = cekId[0].product_image
                 fs.unlink(`./uploads/${image}`, function(err) {
                     if (err) throw err;
-                    console.log('File deleted!');
                 });
                 setData.product_image = product_image.filename
                 const set = setData
@@ -180,7 +177,6 @@ module.exports = {
                 const image = cekId[0].product_image
                 fs.unlink(`./uploads/${image}`, function(err) {
                     if (err) throw err;
-                    console.log('File deleted!');
                 })
                 return helper.response(response, 201, "Product Deleted", result)
             } else {
