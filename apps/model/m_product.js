@@ -31,7 +31,6 @@ module.exports = {
 	},
 	getProductByName: (product_name) => {
 		return new Promise((resolve, reject) => {
-			console.log(product_name)
 			connection.query(`SELECT * FROM product WHERE product_name LIKE '%${product_name}%'`, (error, result) => {
 				!error ? resolve(result) : reject(new Error(error))
 			})
@@ -39,7 +38,6 @@ module.exports = {
 	},
 	getActiveProductByName: (product_name) => {
 		return new Promise((resolve, reject) => {
-			console.log(product_name)
 			connection.query(`SELECT * FROM product WHERE product_name LIKE '%${product_name}%' AND product_status = 1`, (error, result) => {
 				!error ? resolve(result) : reject(new Error(error))
 			})
@@ -63,7 +61,6 @@ module.exports = {
 	patchProduct: (setData, id) => {
 		return new Promise((resolve, reject) => {
 			connection.query('UPDATE product SET ? WHERE product_id = ?', [setData, id], (error, result) => {
-				console.log(id)
 				if (!error) {
 					const newResult = {
 						product_id: id,

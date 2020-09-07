@@ -67,7 +67,6 @@ module.exports = {
             }
 
         } catch (e) {
-            console.log(id)
             return helper.response(response, 400, "Bad Request", error)
         }
     },

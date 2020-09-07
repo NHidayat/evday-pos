@@ -33,7 +33,6 @@ module.exports = {
 	patchCategory: (setData, id) => {
 		return new Promise((resolve, reject) => {
 			connection.query('UPDATE category SET ? WHERE category_id = ?', [setData, id], (error, result) => {
-				console.log(id)
 				if (!error) {
 					const newResult = {
 						category_id: id,
