@@ -13,18 +13,18 @@ app.use(morgan("dev"))
 app.use(express.static('uploads'))
 
 app.use((request, response, next) => {
-	response.header('Access-Control-Allow-Origin', '*')
-	response.header('Access-Control-Allow-Headers', 'Origin, X-Request-With, Content-Type, Accept, Authorization')
-	next()
+    response.header('Access-Control-Allow-Origin', '*')
+    response.header('Access-Control-Allow-Headers', 'Origin, X-Request-With, Content-Type, Accept, Authorization')
+    next()
 })
 
 
 app.use('/', routerNavigation)
 
 app.get('*', (request, response) => {
-	response.status(404).send('Path Not Found !')
+    response.status(404).send('Path Not Found !')
 })
 
-app.listen(3000, '127.0.0.1', () => {
-	console.log('Express app is listening on host: 127.0.0.1 and port: 3000');
+app.listen(process.env.PORT, process.env.IP, () => {
+    console.log(`Express app is listening on host: 127.0.0.1 and port: ${process.env.PORT}`);
 });
