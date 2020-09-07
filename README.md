@@ -43,13 +43,13 @@ IP=this_poject_ip_address // example: 127.0.0.1
 
 <strong>Product</strong>
 
-| Name                | Method    | Link          |
-| ------------------- | --------- | ------------- |
-| Get Product         | GET       | /             |
-| Get Product By Id   | GET       | /:id          |
-| Search Product      | GET       | /search/q     |
-| Get Active Product  | GET       | /active/beta  |
-| Insert Product      | POST      | /             |
-| Edit Product        | PATCH     | /:id          |
-| Delete Product      | DELETE    | /:id          |
+| Name                | Method    | Link          | Request Body  |
+| ------------------- | --------- | ------------- | ------------- |
+| Get Product         | GET       | /             |               |
+| Get Product By Id   | GET       | /:id          |               |
+| Search Product      | GET       | /search/q     |               |
+| Get Active Product  | GET       | /active/beta  |               |
+| Insert Product      | POST      | /             | { product_name: 'Donut', product_image: file, product_price: 1000, category_id: 1, product_status: 1 | 0 } |
+| Edit Product        | PATCH     | /:id          | { product_name: 'Donut', product_image: file, product_price: 1000, category_id: 1, product_status: 1 | 0 } |
+| Delete Product      | DELETE    | /:id          |               |
 
