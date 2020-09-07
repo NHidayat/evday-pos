@@ -22,7 +22,7 @@ Evday-Pos is a restfull-api web that provides point of sale features. The projec
 2. Type `npm install`
 3. Make new file a called **.env**, set up first [here](#set-up-env-file)
 4. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
-5. Create a database with the name #nama_database, and Import file sql to **phpmyadmin**
+5. Create a database with the name evday_pos, and Import file sql to **phpmyadmin**
 6. Open Postman desktop application or Chrome web app extension that has installed before
 7. Choose HTTP Method and enter request url.(ex. localhost:3000/)
 8. You can see all the end point [here](#end-point)
@@ -99,7 +99,7 @@ Set the POST mehod in route `/history` and set the items data. The subtotals of 
 }
 ```
 
-<strong>Other</strong>
+<strong>Others</strong>
 | Name                  | Method    | Link                      | Note                                 |
 | -----------------     | --------- | ------------------------- | ------------------------------------ |
 | Get Recent Orders     | GET       | `/history/page=1&limit=4` | You can customize the page and limit |
