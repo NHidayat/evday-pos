@@ -68,7 +68,7 @@ module.exports = {
     },
     patchUser: async (request, response) => {
         const { id } = request.params
-        const { user_name, user_email, user_password, user_status } = request.body
+        const { user_name, user_password, user_status } = request.body
         const salt = bcrypt.genSaltSync(10)
         const encryptPassword = bcrypt.hashSync(user_password, salt)
         try {
@@ -77,7 +77,6 @@ module.exports = {
             if (cekId.length > 0) {
                 const setData = {
                     user_name,
-                    user_email,
                     user_password: encryptPassword,
                     user_status
                 }
