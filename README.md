@@ -1,6 +1,8 @@
 <h1 align="center">ExpressJS - Evday-POS RESTfull API</h1>
 
-#background_projek. [More about Express](https://en.wikipedia.org/wiki/Express.js)
+
+Evday-Pos is a restfull-api web that provides point of sale features. The project is built with express.js and there are several endpoints that you can easily to access.
+[More about Express](https://en.wikipedia.org/wiki/Express.js)
 
 ## Built With
 
@@ -58,9 +60,17 @@ IP=this_poject_ip_address // example: 127.0.0.1
 | Get Product By Id     | GET       | `/product/:id`        |       |
 | Search Product        | GET       | `/product/search/q?product_name=donut`   | |
 | Get Active Product    | GET       | `/product/active/beta`|               |
-| Insert Product        | POST      | `/product`          | Body `{ "product_name": "Donut", "product_image": file, "product_price": 1000, "category_id": 1, "product_status": 1 or 0 }` |
+| Add Product           | POST      | `/product`          | Body `{ "product_name": "Donut", "product_image": file, "product_price": 1000, "category_id": 1, "product_status": 1 or 0 }` |
 | Edit Product          | PATCH     | `/product/:id`      | Body `{ "product_name": "New Donut", "product_image": file, "product_price": 1000, "category_id": 1, "product_status": 1 or 0 }` |
 | Delete Product        | DELETE    | `/product/:id`      |         |
+
+### Category 
+| Name                   | Method | Link            | Request           |
+| ---------------------- | ------ | --------------- | ----------------- |
+| Get Categories         | GET    | `/category`     |                   |
+| Get Category By Id     | GET    | `/category:id`  |                   |
+| Add Product            | POST   | `/category`     | Body `{ "category_name": "Food", "category_status": 1 or 0 }`  |
+| Edit Category          | PATCH  | `/category:id`  | Body `{ "category_name": "Foods", "category_status": 1 or 0 }` | 
 
 
 ### History
@@ -96,4 +106,5 @@ Set the POST mehod in route `/history` and set the items data. The subtotals of 
 | Get Order By Id       | GET       | `/history/:id`            |   |
 
 ## The postman documentation is <a href="https://documenter.getpostman.com/view/12631524/TVCiU6kU">here</a>
+
 https://documenter.getpostman.com/view/12631524/TVCiU6kU
