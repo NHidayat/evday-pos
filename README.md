@@ -54,9 +54,9 @@ IP=this_poject_ip_address // example: 127.0.0.1
 
 | Name                  | Method    | Link          | Request       |
 | --------------------- | --------- | ------------- | ------------- |
-| Get Product           | GET       | `/product`           |        |
+| Get Product           | GET       | `/product?page=1&limit=9&orderBy=product_created_at DESC` | You can customize the pagination and sorting |
 | Get Product By Id     | GET       | `/product/:id`        |       |
-| Search Product        | GET       | `/product/search/q`   | Query Params `product_name : 1` |
+| Search Product        | GET       | `/product/search/q?product_name=donut`   | |
 | Get Active Product    | GET       | `/product/active/beta`|               |
 | Insert Product        | POST      | `/product`          | Body `{ "product_name": "Donut", "product_image": file, "product_price": 1000, "category_id": 1, "product_status": 1 or 0 }` |
 | Edit Product          | PATCH     | `/product/:id`      | Body `{ "product_name": "New Donut", "product_image": file, "product_price": 1000, "category_id": 1, "product_status": 1 or 0 }` |
@@ -67,7 +67,7 @@ IP=this_poject_ip_address // example: 127.0.0.1
 
 <strong>Checkout</strong>
 
-Use the POST method and set the items data
+Set the POST mehod in route `/history` and set the items data. The subtotals of all items are automatically calculated
 
 ```
 {
@@ -88,3 +88,9 @@ Use the POST method and set the items data
     ]
 }
 ```
+
+### Other
+| Name                  | Method    | Link                      | Note                                 |
+| -----------------     | --------- | ------------------------- | ------------------------------------ |
+| Get Rescent Orders    | GET       | `/history/page=1&limit=4` | You can customize the page and limit |
+
