@@ -26,7 +26,7 @@ module.exports = {
                 }
             })
         } else {
-            return helper.response(response, 403, "Token not found")
+            return helper.response(response, 403, "Please login first")
         }
     },
     authorizationAll: (request, response, next) => {
@@ -51,7 +51,7 @@ module.exports = {
                 }
             })
         } else {
-            return helper.response(response, 403, "Token not found")
+            return helper.response(response, 403, "Please login first")
         }
     }
 }
