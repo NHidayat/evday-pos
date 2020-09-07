@@ -47,7 +47,7 @@ IP=this_poject_ip_address // example: 127.0.0.1
 | ---------- | --------- | ------------------- | ------- |
 | Register   | POST      | `/user/register`    | .body `{ user_email: 'admin@gmail.com' , user_password: 'Admin123', user_name: 'admin' }` |
 | Login      | GET       | `/user/login`       | .body `{ user_email: 'Your email', user_password: 'Your password' }` |
-| Edit User  | POST      | `user/edit`         | .body `{ user_name: 'admin', user_status: 1 |0 , user_password: 'Admin123' }`
+| Edit User  | POST      | `user/edit`         | .body `{ user_name: 'admin', user_status: 1 or 0 , user_password: 'Admin123' }` |
 
 <strong>Product</strong>
 
@@ -57,7 +57,7 @@ IP=this_poject_ip_address // example: 127.0.0.1
 | Get Product By Id     | GET       | `/product/:id`        | .params `{ product_id: 1 }` |
 | Search Product        | GET       | `/product/search/q`   | .query `{product_name: 'Donut' }` |
 | Get Active Product    | GET       | `/product/active/beta`|               |
-| Insert Product        | POST      | `/product`          | .body `{ product_name: 'Donut', product_image: file, product_price: 1000, category_id: 1, product_status: 1 | 0 }` |
-| Edit Product          | PATCH     | `/product/:id`      | .body `{ product_name: 'Donut', product_image: file, product_price: 1000, category_id: 1, product_status: 1 | 0 }` |
-| Delete Product        | DELETE    | `/product/:id`        | .params `{ product_id: 1 }` |
+| Insert Product        | POST      | `/product`          | .body `{ product_name: 'Donut', product_image: file, product_price: 1000, category_id: 1, product_status: 1 or 0 }` |
+| Edit Product          | PATCH     | `/product/:id`      | .body `{ product_name: 'Donut', product_image: file, product_price: 1000, category_id: 1, product_status: 1 or 0 }` |
+| Delete Product        | DELETE    | `/product/:id`      | .params `{ product_id: 1 }` |
 
