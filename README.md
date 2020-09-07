@@ -41,23 +41,50 @@ IP=this_poject_ip_address // example: 127.0.0.1
 
 ## End Point
 
-<strong>Authentication</strong>
+<h4>Authentication</h4>
 
 | Name       | Method    | Link                | Request |
 | ---------- | --------- | ------------------- | ------- |
-| Register   | POST      | `/user/register`    | .body `{ user_email: 'admin@gmail.com' , user_password: 'Admin123', user_name: 'admin' }` |
-| Login      | GET       | `/user/login`       | .body `{ user_email: 'Your email', user_password: 'Your password' }` |
-| Edit User  | POST      | `user/edit`         | .body `{ user_name: 'admin', user_status: 1 or 0 , user_password: 'Admin123' }` |
+| Register   | POST      | `/user/register`    | Body `{ "user_email": "admin@gmail.com" , "user_password": "Admin123", "user_name": "admin" }` |
+| Login      | GET       | `/user/login`       | Body `{ "user_email": "Your email", "user_password": "Your password" }` |
+| Edit User  | POST      | `user/edit`         | Body `{ "user_name": "admin", "user_status": 1 or 0 , "user_password": "Admin123" }` |
 
-<strong>Product</strong>
+
+<h4>Product</h4>
 
 | Name                  | Method    | Link          | Request       |
 | --------------------- | --------- | ------------- | ------------- |
-| Get Product           | GET       | `/product`           |               |
-| Get Product By Id     | GET       | `/product/:id`        | .params `{ product_id: 1 }` |
-| Search Product        | GET       | `/product/search/q`   | .query `{product_name: 'Donut' }` |
+| Get Product           | GET       | `/product`           |        |
+| Get Product By Id     | GET       | `/product/:id`        |       |
+| Search Product        | GET       | `/product/search/q`   | Query Params `product_name : 1` |
 | Get Active Product    | GET       | `/product/active/beta`|               |
-| Insert Product        | POST      | `/product`          | .body `{ product_name: 'Donut', product_image: file, product_price: 1000, category_id: 1, product_status: 1 or 0 }` |
-| Edit Product          | PATCH     | `/product/:id`      | .body `{ product_name: 'Donut', product_image: file, product_price: 1000, category_id: 1, product_status: 1 or 0 }` |
-| Delete Product        | DELETE    | `/product/:id`      | .params `{ product_id: 1 }` |
+| Insert Product        | POST      | `/product`          | Body `{ "product_name": "Donut", "product_image": file, "product_price": 1000, "category_id": 1, "product_status": 1 or 0 }` |
+| Edit Product          | PATCH     | `/product/:id`      | Body `{ "product_name": "New Donut", "product_image": file, "product_price": 1000, "category_id": 1, "product_status": 1 or 0 }` |
+| Delete Product        | DELETE    | `/product/:id`      |         |
 
+
+<h4>History</h4>
+
+<strong>Checkout</strong>
+
+Use the POST method and set the items data
+
+```
+{
+    "items": [
+        {
+            "product_id": 7,
+            "product_name": "Chicken Katsu Dabu-dabu",
+            "qty": 4,
+            "subtotal": 60000
+        },
+        {
+            "product_id": 2,
+            "product_name": "Cofee Latte",
+            "qty": 2,
+            "subtotal": 15000
+        }
+        
+    ]
+}
+```
