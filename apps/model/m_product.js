@@ -22,6 +22,13 @@ module.exports = {
 			})
 		})
 	},
+	getProductActiveCount: () => {
+		return new Promise((resolve, reject) => {
+			connection.query('SELECT COUNT(*) AS total FROM product WHERE product_status = 1', (error, result) => {
+				!error ? resolve(result[0].total) : reject(new Error(error))
+			})
+		})
+	},
 	getProductById: (id) => {
 		return new Promise((resolve, reject) => {
 			connection.query('SELECT * FROM product WHERE product_id = ?', id, (error, result) => {

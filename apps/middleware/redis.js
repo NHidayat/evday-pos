@@ -3,10 +3,52 @@ const client = redis.createClient()
 const helper = require('../helper/my_helper')
 
 module.exports = {
+	getUsersRedis: (request, response, next) => {
+		client.get(`getusers`,(error, result) => {
+			if (!error && result !== null) {
+				return helper.response(response, 200, `Success get product`, JSON.parse(result))
+			} else {
+				next()
+			}
+		})
+	},
+	getUserByIdRedis: (request, response, next) => {
+		const { id } = request.params
+		client.get(`getuser:${id}`,(error, result) => {
+			if (!error && result !== null) {
+				return helper.response(response, 200, `Success get user by id ${id}`, JSON.parse(result))
+			} else {
+				next()
+			}
+		})
+	},
+	clearDataUsersRedis:  (request, response, next) => {
+		client.keys('getuser*', (error, keys) => {
+			keys.map(v => {
+				client.del(v)
+			})
+		})
+		next()
+	},
 	getProductRedis: (request, response, next) => {
 		client.get(`getproduct:${JSON.stringify(request.query)}`,(error, result) => {
 			if (!error && result !== null) {
-				return helper.response(response, 200, `Success get product`, JSON.parse(result) )
+				const getData = JSON.parse(result)
+				const data = getData.result
+				const pagination = getData.pagination
+				return helper.response(response, 200, `Success get product`, data, pagination)
+			} else {
+				next()
+			}
+		})
+	},
+	getActiveProductRedis: (request, response, next) => {
+		client.get(`getproductactive:${JSON.stringify(request.query)}`,(error, result) => {
+			if (!error && result !== null) {
+				const getData = JSON.parse(result)
+				const data = getData.result
+				const pagination = getData.pagination
+				return helper.response(response, 200, 'Success get active product', data, pagination)
 			} else {
 				next()
 			}
@@ -39,10 +81,20 @@ module.exports = {
 	getHistoriesRedis: (request, response, next) => {
 		client.get(`gethistories:${JSON.stringify(request.query)}`,(error, result) => {
 			if (!error && result !== null) {
-				console.log('data ada di dalam redis')
+				const getData = JSON.parse(result)
+				const data = getData.result
+				const pagination = getData.pagination
+				return helper.response(response, 200, `Success get histories`, data, pagination )
+			} else {
+				next()
+			}
+		})
+	},
+	getHistoryIncomeRedis: (request, response, next) => {
+		client.get('gethistoriesIncome',(error, result) => {
+			if (!error && result !== null) {
 				return helper.response(response, 200, `Success get histories`, JSON.parse(result) )
 			} else {
-				console.log('data tidak ada di dalam redis')
 				next()
 			}
 		})
@@ -51,10 +103,8 @@ module.exports = {
 		const { id } =  request.params
 		client.get(`gethistorybyid:${id}`,(error, result) => {
 			if (!error && result !== null) {
-				console.log('data ada di dalam redis')
 				return helper.response(response, 200, `Success get histories`, JSON.parse(result) )
 			} else {
-				console.log('data tidak ada di dalam redis')
 				next()
 			}
 		})
@@ -71,10 +121,8 @@ module.exports = {
 		const { id } =  request.params
 		client.get('getcategories',(error, result) => {
 			if (!error && result !== null) {
-				console.log('data ada di dalam redis')
 				return helper.response(response, 200, `Success get categories`, JSON.parse(result) )
 			} else {
-				console.log('data tidak ada di dalam redis')
 				next()
 			}
 		})

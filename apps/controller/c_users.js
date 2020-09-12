@@ -1,14 +1,43 @@
 const bcrypt = require('bcrypt')
 const helper = require('../helper/my_helper')
 const jwt = require('jsonwebtoken')
-const { postUser, cekUser, getUserById, patchUser } = require('../model/m_users')
+const { getUsers, postUser, cekUser, getUserById, patchUser } = require('../model/m_users')
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
+    getUsers: async (request, response) => {
+        try {
+            const result = await getUsers()
+            client.set(`getusers`, JSON.stringify(result))
+            return helper.response(response, 200, 'Success get all users', result)
+
+        } catch (e) {
+            return helper.response(response, 400, 'Bad request', e)
+        }
+    },
+    getUserById: async (request, response) => {
+        const { id } = request.params
+        try {
+            const result = await getUserById(id)
+            if (result.length > 0) {
+                client.set(`getuser:${id}`, JSON.stringify(result))
+                return helper.response(response, 200, `Success get user by id ${id}`, result)
+            } else {
+                return helper.response(response, 404, `User by id ${id} not found!`, result)
+            }
+
+        } catch (e) {
+            return helper.response(response, 400, 'Bad request', e)
+        }
+    },
     registerUser: async (request, response) => {
         const { user_email, user_password, user_name } = request.body
         const salt = bcrypt.genSaltSync(10)
         const encryptPassword = bcrypt.hashSync(user_password, salt)
 
+        const email_validation = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+        const password_validation = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
         const setData = {
             user_email,
             user_password: encryptPassword,
@@ -17,14 +46,20 @@ module.exports = {
             user_status: 0,
             user_created_at: new Date()
         }
+        if (email_validation.test(user_email) == false) {
+            return helper.response(response, 403, 'Your email is not valid')
+        }
 
         try {
             const checkUserData = await cekUser(user_email)
             if (checkUserData.length > 0) {
                 return helper.response(response, 403, 'This email already rigistered ')
+
+            } else if (!user_password.match(password_validation)) {
+                return helper.response(response, 403, 'Password must be between 6 to 20 characters. Contain at least one numeric digit, one uppercase and one lowercase letter')
             } else {
                 const result = await postUser(setData)
-                return helper.response(response, 200, 'Success Register User', result)
+                return helper.response(response, 200, 'Register is success, pelase contact the admin to activate your account', result)
             }
         } catch (e) {
             return helper.response(response, 400, 'Bad Request', e)
@@ -47,6 +82,7 @@ module.exports = {
                         let payload = {
                             user_id,
                             user_email,
+                            user_name,
                             user_role,
                             user_status
                         }
@@ -67,15 +103,18 @@ module.exports = {
     },
     patchUser: async (request, response) => {
         const { id } = request.params
-        const { user_name, user_password, user_status } = request.body
-        const salt = bcrypt.genSaltSync(10)
-        const encryptPassword = bcrypt.hashSync(user_password, salt)
+        const { user_name, user_status } = request.body
+        if (
+            user_name == undefined || user_name == '' ||
+            user_status == undefined || user_status == ''
+        ) {
+            return helper.response(response, 403, 'Data must be complete')
+        }
         try {
             const cekId = await getUserById(id)
             if (cekId.length > 0) {
                 const setData = {
                     user_name,
-                    user_password: encryptPassword,
                     user_status
                 }
                 const result = await patchUser(setData, id)
@@ -84,6 +123,7 @@ module.exports = {
                 return helper.response(response, 404, `User with ID ${id} not found`)
             }
         } catch (e) {
+            console.log(e)
             return helper.response(response, 400, 'Bad Request', e)
         }
     }

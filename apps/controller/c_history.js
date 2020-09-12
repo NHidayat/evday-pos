@@ -10,11 +10,6 @@ module.exports = {
         page = page == undefined ? 1 : parseInt(page)
         limit = limit == undefined ? 9 : parseInt(limit)
 
-        const dataThisWeek = await getHistoryWeekCount()
-        const todayIncome = await getHistoryTodayIncome()
-        const thisYearIncome = await getHistoryThisYearIncome()
-        const dailyIncome = await getDailyIncome()
-
         const totalData = await getHistoryCount()
         const totalPage = Math.ceil(totalData / limit)
         let offset = page * limit - limit
@@ -27,10 +22,6 @@ module.exports = {
             totalPage,
             limit,
             totalData,
-            dataThisWeek,
-            todayIncome,
-            thisYearIncome,
-            dailyIncome,
             prevLink: prevLink && `http://127.0.0.1:3000/history?${prevLink}`,
             nextLink: nextLink && `http://127.0.0.1:3000/history?${nextLink}`
         }
@@ -40,10 +31,29 @@ module.exports = {
             for (let i = 0; i < result.length; i++) {
                 result[i].items = await getItemByHistory(result[i].history_id)
             }
-            client.set(`gethistories:${JSON.stringify(request.query)}`, JSON.stringify(result))
+            const newResult = { result, pagination: pageInfo }
+            client.set(`gethistories:${JSON.stringify(request.query)}`, JSON.stringify(newResult))
             return helper.response(response, 200, "Success Get Histories", result, pageInfo)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
+        }
+    },
+    getHistoriesIncome: async (request, response) => {
+        try {
+            const dataThisWeek = await getHistoryWeekCount()
+            const todayIncome = await getHistoryTodayIncome()
+            const thisYearIncome = await getHistoryThisYearIncome()
+            const dailyIncome = await getDailyIncome()
+            const newResult = {
+                thisWeekIncome: dataThisWeek,
+                todayIncome,
+                thisYearIncome,
+                dailyIncome
+            }
+            client.set('gethistoriesIncome', JSON.stringify(newResult))
+            return helper.response(response, 200, "Success get income", newResult)
+        } catch (e) {
+            return helper.response(response, 400, "Bad Request", e)            
         }
     },
     getHistoryById: async (request, response) => {
@@ -72,7 +82,7 @@ module.exports = {
         const itemsTotal = itemsData.map(item => item.subtotal).reduce((a, b) => a + b)
         const history_ppn = (0.1 * itemsTotal)
         const history_total = itemsTotal + history_ppn
-        const cashier_name = 'Pevita Pearce'
+        const cashier_name = request.body.cashier_name
         try {
             const invoiceData = {
                 history_invoice,

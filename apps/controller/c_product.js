@@ -1,4 +1,4 @@
-const { getProduct, getProductCount, getProductById, postProduct, patchProduct, deleteProduct, getActiveProductByName, getActiveProduct } = require('../model/m_product')
+const { getProduct, getProductCount, getProductById, postProduct, patchProduct, deleteProduct, getActiveProductByName, getActiveProduct, getProductActiveCount } = require('../model/m_product')
 const helper = require('../helper/my_helper')
 const qs = require('querystring')
 const redis = require('redis')
@@ -31,7 +31,7 @@ module.exports = {
 
         try {
             const result = await getProduct(orderBy, limit, offset)
-            const newResult = { result, pageInfo }
+            const newResult = { result, pagination: pageInfo }
             client.set(`getproduct:${JSON.stringify(request.query)}`, JSON.stringify(newResult))
             return helper.response(response, 200, "Success Get Product", result, pageInfo)
         } catch (error) {
@@ -44,7 +44,7 @@ module.exports = {
         limit = limit == undefined ? 9 : parseInt(limit)
         orderBy = orderBy == undefined ? 'product_price ASC' : orderBy
 
-        const totalData = await getProductCount()
+        const totalData = await getProductActiveCount()
         const totalPage = Math.ceil(totalData / limit)
         let offset = page * limit - limit
 
@@ -63,8 +63,11 @@ module.exports = {
 
         try {
             const result = await getActiveProduct(orderBy, limit, offset)
+            const newResult = { result, pagination: pageInfo }
+            client.set(`getproductactive:${JSON.stringify(request.query)}`, JSON.stringify(newResult))
             return helper.response(response, 200, "Success Get Product", result, pageInfo)
         } catch (error) {
+            console.log(error)
             return helper.response(response, 400, "Bad Request", error)
         }
     },

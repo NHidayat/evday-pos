@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { getAllProduct, getProductById, getProductByName, postProduct, patchProduct, deleteProduct, getActiveProduct } = require('../controller/c_product')
 const { authorizationAdmin, authorizationAll } = require('../middleware/auth')
-const { getProductRedis, getProductByIdRedis, clearDataProductRedis } = require('../middleware/redis')
+const { getProductRedis, getActiveProductRedis, getProductByIdRedis, clearDataProductRedis } = require('../middleware/redis')
 const uploadImage = require('../middleware/multer')
 const checkId = require('../middleware/checkProduct')
 
@@ -15,7 +15,7 @@ router.get('/:id', authorizationAdmin, getProductByIdRedis, getProductById)
 router.get('/search/q', authorizationAll, getProductByName)
 
 // GET Active Product
-router.get('/active/beta', authorizationAll, getActiveProduct)
+router.get('/active/beta', authorizationAll, getActiveProductRedis, getActiveProduct)
 
 // POST
 router.post('/', authorizationAdmin, clearDataProductRedis, uploadImage, postProduct)
