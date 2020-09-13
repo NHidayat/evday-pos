@@ -91,7 +91,7 @@ module.exports = {
 		})
 	},
 	getHistoryIncomeRedis: (request, response, next) => {
-		client.get('gethistoriesIncome',(error, result) => {
+		client.get(`gethistoriesIncome:${JSON.stringify(request.body)}`,(error, result) => {
 			if (!error && result !== null) {
 				return helper.response(response, 200, `Success get histories`, JSON.parse(result) )
 			} else {

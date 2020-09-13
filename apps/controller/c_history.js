@@ -40,17 +40,23 @@ module.exports = {
     },
     getHistoriesIncome: async (request, response) => {
         try {
+            let { period } = request.query
+            
+            if (period == undefined || period == '') {
+                period = 'week'
+            }
+            
             const dataThisWeek = await getHistoryWeekCount()
             const todayIncome = await getHistoryTodayIncome()
             const thisYearIncome = await getHistoryThisYearIncome()
-            const dailyIncome = await getDailyIncome()
+            const dailyIncome = await getDailyIncome(period)
             const newResult = {
                 thisWeekIncome: dataThisWeek,
                 todayIncome,
                 thisYearIncome,
                 dailyIncome
             }
-            client.set('gethistoriesIncome', JSON.stringify(newResult))
+            client.set(`gethistoriesIncome:${JSON.stringify(request.query)}`, JSON.stringify(newResult))
             return helper.response(response, 200, "Success get income", newResult)
         } catch (e) {
             return helper.response(response, 400, "Bad Request", e)            
