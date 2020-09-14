@@ -47,9 +47,9 @@ IP=this_poject_ip_address // example: 127.0.0.1
 
 | Name       | Method    | Link                | Request |
 | ---------- | --------- | ------------------- | ------- |
-| Register   | POST      | `/user/register`    | Body `{ "user_email": "admin@gmail.com" , "user_password": "Admin123", "user_name": "admin" }` |
-| Login      | GET       | `/user/login`       | Body `{ "user_email": "Your email", "user_password": "Your password" }` |
-| Edit User  | POST      | `user/edit`         | Body `{ "user_name": "admin", "user_status": 1 or 0 , "user_password": "Admin123" }` |
+| Register   | POST      | `/users/register`    | Body `{ "user_email": "admin@gmail.com" , "user_password": "Admin123", "user_name": "admin" }` |
+| Login      | POST       | `/users/login`       | Body `{ "user_email": "Your email", "user_password": "Your password" }` |
+| Edit User  | POST      | `usesr/edit`         | Body `{ "user_name": "admin", "user_status": 1 or 0 }` |
 
 
 ### Product
@@ -81,6 +81,7 @@ Set the POST mehod in route `/history` and set the items data. The subtotals of 
 
 ```
 {
+    "cashier_name": "Pevita",
     "items": [
         {
             "product_id": 7,
