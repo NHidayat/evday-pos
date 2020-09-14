@@ -95,7 +95,7 @@ module.exports = {
                 }
 
             } else {
-                return helper.response(response, 400, 'Email not Registed')
+                return helper.response(response, 400, 'Email not Registered')
             }
         } catch (e) {
             return helper.response(response, 400, 'Bad Request')
