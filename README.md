@@ -16,17 +16,6 @@ Evday-Pos is a restfull-api web that provides point of sale features. The projec
 3. <a href="https://www.getpostman.com/">Postman</a>
 4. Web Server (ex. localhost)
 
-## How to run the app ?
-
-1. Open app's directory in CMD or Terminal
-2. Type `npm install`
-3. Make new file a called **.env**, set up first [here](#set-up-env-file)
-4. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
-5. Create a database with the name **evday_pos**, and Import file sql to **phpmyadmin**
-6. Type ```npm start``` on your CMD or Terminal
-6. Open Postman desktop application or Chrome web app extension that has installed before
-7. Choose HTTP Method and enter request url.(ex. localhost:3000/)
-
 ## Set up .env file
 
 Open .env file on your favorite code editor, and copy paste this code below :
@@ -40,6 +29,18 @@ DB_NAME=your_database
 PORT=this_project_port //example: 3000
 IP=this_poject_ip_address // example: 127.0.0.1
 ```
+
+## How to run the app ?
+
+1. Open app's directory in CMD or Terminal
+2. Type `npm install`
+3. Make new file a called **.env**, set up first [here](#set-up-env-file)
+4. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
+5. Create a database with the name **evday_pos**, and Import file sql to **phpmyadmin**
+6. Type ```npm start``` on your CMD or Terminal
+6. Open Postman desktop application or Chrome web app extension that has installed before
+7. Choose HTTP Method and enter request url.(ex. localhost:3000/)
+
 
 ## The postman documentation is <a href="https://documenter.getpostman.com/view/12631524/TVCiU6kU">here</a>
 
