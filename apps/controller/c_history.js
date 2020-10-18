@@ -107,6 +107,14 @@ module.exports = {
     sendEmail: async (request, response) => {
         const nodemailer = require("nodemailer")
         const { history_invoice, target_email } = request.body
+        
+        if ( 
+            history_invoice == '' || history_invoice == undefined ||
+            target_email == '' || target_email == undefined
+            ) {
+            return helper.response(response, 403, 'Data is not complete')
+        }
+
         try {
             const getHistory = await getHistoryByInvoice(history_invoice)
             if (getHistory.length < 1) {
