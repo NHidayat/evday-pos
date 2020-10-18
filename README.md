@@ -28,7 +28,17 @@ DB_NAME=your_database
 
 PORT=this_project_port //example: 3000
 IP=this_poject_ip_address // example: 127.0.0.1
+
+USER_EMAIL = your email
+PASS_EMAIL = your email password
 ```
+<b>Note</b>: Make sure the email used is less secure
+<p>
+  Step 1:
+  go here https://myaccount.google.com/lesssecureapps => enable for less secure apps.
+  Step 2
+  go here https://accounts.google.com/DisplayUnlockCaptcha => enable/continue and then try.
+</p>
 
 ## How to run the app ?
 
