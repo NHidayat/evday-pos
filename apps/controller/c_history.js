@@ -1,4 +1,4 @@
-const { getAllHistory, getHistoryById, getItemByHistory, postHistory, getHistoryCount, getHistory, getHistoryWeekCount, getHistoryTodayIncome, getHistoryThisYearIncome, getDailyIncome } = require('../model/m_history')
+const { getAllHistory, getHistoryById, getItemByHistory, postHistory, getHistoryCount, getHistory, getHistoryWeekCount, getHistoryTodayIncome, getHistoryThisYearIncome, getDailyIncome, getHistoryByInvoice } = require('../model/m_history')
 const { postOrderItem } = require('../model/m_order')
 const helper = require('../helper/my_helper')
 const redis = require('redis')
@@ -41,11 +41,11 @@ module.exports = {
     getHistoriesIncome: async (request, response) => {
         try {
             let { period } = request.query
-            
+
             if (period == undefined || period == '') {
                 period = 'week'
             }
-            
+
             const dataThisWeek = await getHistoryWeekCount()
             const todayIncome = await getHistoryTodayIncome()
             const thisYearIncome = await getHistoryThisYearIncome()
@@ -59,7 +59,7 @@ module.exports = {
             client.set(`gethistoriesIncome:${JSON.stringify(request.query)}`, JSON.stringify(newResult))
             return helper.response(response, 200, "Success get income", newResult)
         } catch (e) {
-            return helper.response(response, 400, "Bad Request", e)            
+            return helper.response(response, 400, "Bad Request", e)
         }
     },
     getHistoryById: async (request, response) => {
@@ -102,6 +102,68 @@ module.exports = {
             return helper.response(response, 200, "Success Post History", result)
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
+        }
+    },
+    sendEmail: async (request, response) => {
+        const nodemailer = require("nodemailer")
+        const { history_invoice, target_email } = request.body
+        try {
+            const getHistory = await getHistoryByInvoice(history_invoice)
+            if (getHistory.length < 1) {
+                return helper.response(response, 404, `Sorry history by invoice ID ${history_invoice} is not found`)
+            } else {
+                getHistory[0].items = await getItemByHistory(getHistory[0].history_id)
+
+                let transporter = nodemailer.createTransport({
+                    host: "smtp.gmail.com",
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        user: process.env.USER_EMAIL,
+                        pass: process.env.PASS_EMAIL
+                    },
+                });
+                const v = getHistory[0]
+                let email_body = `
+                <h3>Invoice no #${v.history_invoice}</h3>
+                <div>
+                    <span>Cahsier: ${v.cashier_name }</span><br>
+                    <span>Date: ${ v.history_created_at }</span><br>
+                    <span>Items:</span>
+                </div>
+                `
+                v.items.forEach((item, index) => {
+                    email_body += `
+                    <div>
+                        - ${item.product_name} x${item.qty}: Rp ${helper.formatN(item.subtotal)}
+                    </div> 
+                    `
+                });
+                email_body += `
+                <div style="margin-top:10px">
+                    <span>Tax: Rp ${helper.formatN(v.history_ppn)}</span><br>
+                    <span>Total: Rp ${helper.formatN(v.history_total)}</span><br>
+                </div>
+                <div style="margin-top:25px">
+                    <span>thank you for using our services :)</span>
+                </div>
+                `
+                let info = await transporter.sendMail({
+                    from: `"Cemol Dev 👻" <${process.env.USER_EMAIL}>`,
+                    to: target_email,
+                    subject: "Your Invoice ✔",
+                    html: email_body
+                });
+                const msg = { message_set: info.messageId }
+                const result = {
+                    ...msg,
+                    getHistory
+                }
+                
+                return helper.response(response, 200, 'Email has been sent :)', result)
+            }
+        } catch (e) {
+            return helper.response(response, 400, 'Bad Request', e)
         }
     }
 }

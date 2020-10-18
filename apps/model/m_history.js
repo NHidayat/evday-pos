@@ -105,4 +105,11 @@ module.exports = {
             })
         })
     },
+    getHistoryByInvoice: (invoice) => {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM history WHERE history_invoice = ?', invoice, (error, result) => {
+                !error ? resolve(result) : reject(new Error(error))
+            })
+        })
+    },
 }

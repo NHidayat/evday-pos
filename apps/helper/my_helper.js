@@ -26,6 +26,9 @@ module.exports = {
 		} else {
 			return null
 		}
-	}
+	},
+	formatN: (x) => {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    },
 
 }
