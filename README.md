@@ -33,12 +33,8 @@ USER_EMAIL = your email
 PASS_EMAIL = your email password
 ```
 <b>Note</b>: Make sure the email used is less secure
-<p>
-  Step 1:
-  go here https://myaccount.google.com/lesssecureapps => enable for less secure apps.
-  Step 2
-  go here https://accounts.google.com/DisplayUnlockCaptcha => enable/continue and then try.
-</p>
+1. go here https://myaccount.google.com/lesssecureapps => enable for less secure apps.
+2. go here https://accounts.google.com/DisplayUnlockCaptcha => enable/continue and then try.
 
 ## How to run the app ?
 
@@ -52,6 +48,6 @@ PASS_EMAIL = your email password
 7. Choose HTTP Method and enter request url.(ex. localhost:3000/)
 
 
-## The postman documentation is <a href="https://documenter.getpostman.com/view/12631524/TVCiU6kU">here</a>
+## The postman documentation is [here](https://documenter.getpostman.com/view/12631524/TVCiU6kU)
 
 https://documenter.getpostman.com/view/12631524/TVCiU6kU
