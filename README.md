@@ -28,7 +28,13 @@ DB_NAME=your_database
 
 PORT=this_project_port //example: 3000
 IP=this_poject_ip_address // example: 127.0.0.1
+
+USER_EMAIL = your email
+PASS_EMAIL = your email password
 ```
+<b>Note</b>: Make sure the email used is less secure
+1. go here https://myaccount.google.com/lesssecureapps => enable for less secure apps.
+2. go here https://accounts.google.com/DisplayUnlockCaptcha => enable/continue and then try.
 
 ## How to run the app ?
 
@@ -42,6 +48,6 @@ IP=this_poject_ip_address // example: 127.0.0.1
 7. Choose HTTP Method and enter request url.(ex. localhost:3000/)
 
 
-## The postman documentation is <a href="https://documenter.getpostman.com/view/12631524/TVCiU6kU">here</a>
+## The postman documentation is [here](https://documenter.getpostman.com/view/12631524/TVCiU6kU)
 
 https://documenter.getpostman.com/view/12631524/TVCiU6kU
