@@ -128,7 +128,6 @@ module.exports = {
                 return helper.response(response, 200, 'Email has been send! Pelase check your email for activate your account', result)
             }
         } catch (e) {
-            console.log(e)
             return helper.response(response, 400, 'Bad Request', e)
         }
     },
@@ -149,7 +148,6 @@ module.exports = {
                 return helper.response(response, 200, 'Congratulation! your registration is success', helper) 
             }
         } catch(e) {
-            console.log(e)
             return helper.response(response, 400, 'Bad Request', e)
         }
     },
@@ -211,7 +209,6 @@ module.exports = {
                 return helper.response(response, 404, `User with ID ${id} not found`)
             }
         } catch (e) {
-            console.log(e)
             return helper.response(response, 400, 'Bad Request', e)
         }
     }

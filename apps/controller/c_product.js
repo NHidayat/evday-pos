@@ -67,7 +67,6 @@ module.exports = {
             client.set(`getproductactive:${JSON.stringify(request.query)}`, JSON.stringify(newResult))
             return helper.response(response, 200, "Success Get Product", result, pageInfo)
         } catch (error) {
-            console.log(error)
             return helper.response(response, 400, "Bad Request", error)
         }
     },
