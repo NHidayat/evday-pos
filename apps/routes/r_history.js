@@ -3,9 +3,9 @@ const { getAllHistory, getHistoriesIncome, getHistoryById, postHistory, sendEmai
 const { authorizationAdmin, authorizationAll } = require('../middleware/auth')
 const { getHistoriesRedis, getHistoryIncomeRedis, getHistoryByIdRedis, clearDataHistoryRedis } = require('../middleware/redis')
 
-router.get('/', authorizationAdmin, getHistoriesRedis, getAllHistory)
-router.get('/:id', authorizationAdmin, getHistoryByIdRedis, getHistoryById)
-router.get('/histories-income/alpha', authorizationAdmin, getHistoryIncomeRedis, getHistoriesIncome)
+router.get('/', authorizationAll, getHistoriesRedis, getAllHistory)
+router.get('/:id', authorizationAll, getHistoryByIdRedis, getHistoryById)
+router.get('/histories-income/alpha', authorizationAll, getHistoryIncomeRedis, getHistoriesIncome)
 router.post('/', authorizationAll, clearDataHistoryRedis, postHistory)
 router.post('/send-email', authorizationAll, sendEmail)
 

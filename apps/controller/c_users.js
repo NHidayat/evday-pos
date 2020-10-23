@@ -135,13 +135,18 @@ module.exports = {
     activationUser: async (request, response) => {
         try {
             const { user_key } = request.body
+            
+            if (user_key == '' || user_key == undefined) {
+                return  helper.response(response, 403, 'Key must be filled')
+            }
+
             const checkKey = await getUserByKey(user_key)
             if (checkKey.length < 1) {
-                return helper.response(response, 404, 'Key is not found :(')
+                return helper.response(response, 404, 'Your code is wrong :(')
             } else {
                 const id = checkKey[0].user_id
                 const result = await patchUser({ user_key: '', user_status: 1 }, id)
-                return helper.response(response, 200, 'Conratulation! your registartion is success', helper) 
+                return helper.response(response, 200, 'Congratulation! your registration is success', helper) 
             }
         } catch(e) {
             console.log(e)
