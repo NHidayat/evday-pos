@@ -52,5 +52,12 @@ module.exports = {
                 }
             })
         })
+    },
+    getUserByKey: (key) => {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT user_id, user_email, user_name FROM user WHERE user_key = ?', key, (error, result) => {
+                 !error ? resolve(result) : reject(new Error(error))
+            })
+        })
     }
 }
